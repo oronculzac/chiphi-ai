@@ -88,15 +88,25 @@
   - Update error handling to work with provider abstraction
   - _Requirements: 2.1, 2.4, 2.5, 2.6_
 
-- [ ] 7. Update Configuration Schema for New Features
+- [x] 7. Configure AWS SES Email Processing Infrastructure
+  - Set up AWS SES receipt rules for chiphi.oronculzac.com domain
+  - Create SNS topic (chiphi-email-notifications) for email notifications
+  - Configure S3 bucket (chiphi-raw-emails) with proper IAM policies for SES
+  - Deploy Lambda function (chiphi-email-processor) with Node.js 20.x runtime
+  - Integrate Lambda with SNS topic and configure webhook to /api/inbound/lambda
+  - Update environment variables with AWS configuration (region, account, ARNs)
+  - _Requirements: 2.2, 2.3, 6.1, 6.5_
+
+- [ ] 8. Update Configuration Schema for New Features
   - Add INBOUND_PROVIDER, CLOUDFLARE_EMAIL_SECRET, and SES_WEBHOOK_SECRET to lib/config.ts
+  - Add AWS configuration variables (region, account ID, S3 bucket, SNS topic ARN)
   - Add visual regression testing configuration variables
   - Add diagnostic and debug endpoint configuration options
   - Update environment variable validation with new provider settings
   - Create configuration validation for provider-specific requirements
   - _Requirements: 2.2, 4.1, 6.4_
 
-- [ ] 8. Create Database Migrations for Provider Tracking
+- [ ] 9. Create Database Migrations for Provider Tracking
   - Create Supabase migration for email_provider_logs table
   - Add provider tracking fields (provider_name, payload, processing_time_ms)
   - Implement unique constraint for message idempotency (org_id, message_id)
@@ -104,7 +114,7 @@
   - Add proper RLS policies for multi-tenant data isolation
   - _Requirements: 2.5, 3.1, 3.2, 3.3, 6.5_
 
-- [ ] 9. Update Supabase Configuration for New Project
+- [ ] 10. Update Supabase Configuration for New Project
 
 
 
@@ -117,7 +127,7 @@
   - Verify all existing functionality works with new Supabase project
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 10. Implement Visual Regression Testing with Playwright MCP (Primary UI Testing Tool)
+- [ ] 11. Implement Visual Regression Testing with Playwright MCP (Primary UI Testing Tool)
   - **Use Playwright MCP as the primary tool for all UI/UX testing and validation**
   - Create tests/visual/ui-regression.spec.ts with comprehensive UI testing using MCP
   - Use `browser_snapshot` for accessibility-focused testing (preferred over screenshots)
@@ -128,7 +138,7 @@
   - Integrate with shadcn MCP for component validation workflow
   - _Requirements: 1.3, 4.2, 4.3, 4.4_
 
-- [ ] 11. Create Health Check and Admin Endpoints
+- [ ] 12. Create Health Check and Admin Endpoints
   - Create app/api/health/route.ts with comprehensive system health checks
   - Implement database connectivity, storage, and queue health verification
   - Add provider-specific health checks and status reporting
@@ -136,7 +146,7 @@
   - Implement proper error handling and security for admin endpoints
   - _Requirements: 4.5, 6.5_
 
-- [ ] 12. Implement Multi-tenant RLS Verification Tests
+- [ ] 13. Implement Multi-tenant RLS Verification Tests
   - Create comprehensive RLS policy tests for cross-tenant data isolation
   - Test that users cannot access other organizations' email data
   - Verify provider logs are properly isolated by organization
@@ -144,7 +154,7 @@
   - Create automated tests to verify RLS policies are enforced
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 13. Create Provider Contract Tests and Synthetic Payloads with MCP Integration
+- [ ] 14. Create Provider Contract Tests and Synthetic Payloads with MCP Integration
   - Implement contract tests for CloudflareAdapter and SESAdapter
   - Create synthetic email payloads for testing provider functionality
   - **Use Playwright MCP as primary tool** to post test payloads to /api/inbound endpoint
@@ -154,7 +164,7 @@
   - Use Playwright MCP to verify UI updates after email processing
   - _Requirements: 2.5, 5.1, 5.2, 5.3_
 
-- [ ] 14. Implement MerchantMap Learning System Verification
+- [ ] 15. Implement MerchantMap Learning System Verification
   - Verify MerchantMap learning functionality remains intact after changes
   - Test transaction categorization with confidence scores and explanations
   - Implement Original↔English translation toggle functionality testing
@@ -162,7 +172,7 @@
   - Test that user corrections update MerchantMap associations
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 15. Create CI Integration and Regression Prevention
+- [ ] 16. Create CI Integration and Regression Prevention
   - Implement CI pipeline integration for visual regression tests
   - Create automated checks that fail builds when Tailwind directives are missing
   - Add style regression detection to prevent future CSS configuration issues
@@ -170,7 +180,7 @@
   - Create comprehensive test suite that runs on every pull request
   - _Requirements: 4.4, 4.5_
 
-- [ ] 16. Establish MCP-First UI/UX Development Workflow
+- [ ] 17. Establish MCP-First UI/UX Development Workflow
   - **Implement comprehensive MCP integration for all UI/UX work**
   - Create standardized workflow: shadcn MCP for component discovery → Playwright MCP for testing
   - Use shadcn MCP `getAllComponents` to audit current component library completeness

@@ -20,10 +20,18 @@ An intelligent, multilingual receipt processing system that automatically transl
 - **AI**: OpenAI GPT-4o-mini for extraction and translation
 - **UI**: Tailwind CSS 4 + shadcn/ui components
 - **Auth**: Supabase Auth with multi-tenant support
+- **Email Processing**: AWS SES + Lambda (Node.js 20.x) + S3
 - **Testing**: Playwright + Vitest with comprehensive test coverage
-- **Deployment**: Vercel with GitHub integration
+- **Deployment**: AWS Amplify with email infrastructure on AWS
+- **Development**: Built with [Kiro AI IDE](https://kiro.ai) 🤖
 
 ## 🏗 Architecture
+
+### Email Processing Infrastructure
+- **AWS SES**: Receives emails at chiphi.oronculzac.com
+- **AWS Lambda**: Parses MIME content with mailparser
+- **AWS S3**: Stores raw email content for processing
+- **AWS SNS**: Triggers Lambda functions on email arrival
 
 ### Provider Abstraction Layer
 - Supports multiple email providers (Cloudflare, SES)
@@ -51,7 +59,8 @@ An intelligent, multilingual receipt processing system that automatically transl
 ### Environment Setup
 1. Copy `.env.example` to `.env.local`
 2. Fill in your Supabase and OpenAI credentials
-3. Configure email provider settings
+3. Configure email provider settings (SES or Cloudflare)
+4. Set up AWS infrastructure (see AWS deployment guide)
 
 ### Development
 ```bash
@@ -117,8 +126,9 @@ Supports receipt processing in:
 ## 📚 Documentation
 
 - [API Documentation](docs/)
+- [AWS Deployment Guide](.kiro/steering/aws-deployment.md)
 - [Testing Guide](docs/testing-guide.md)
-- [Deployment Guide](docs/production-deployment.md)
+- [Email Provider Setup](lib/inbound/README.md)
 - [Performance Optimizations](docs/performance-optimizations.md)
 
 ## 🤝 Contributing
@@ -141,4 +151,6 @@ For issues and questions:
 
 ---
 
-Built with ❤️ using Next.js, Supabase, and OpenAI
+**Developed with [Kiro AI IDE](https://kiro.ai)** 🤖 - The AI-powered development environment
+
+Built with ❤️ using Next.js, Supabase, OpenAI, and AWS

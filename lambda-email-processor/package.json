@@ -1,0 +1,17 @@
+{
+  "name": "chiphi-email-processor",
+  "version": "1.0.0",
+  "description": "Lambda function to process inbound emails from SES",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "build": "esbuild index.mjs --bundle --platform=node --target=node20 --outfile=dist/index.mjs --external:@aws-sdk/*",
+    "package": "npm run build && cd dist && zip -r ../lambda-deployment.zip ."
+  },
+  "dependencies": {
+    "mailparser": "^3.6.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.0"
+  }
+}
