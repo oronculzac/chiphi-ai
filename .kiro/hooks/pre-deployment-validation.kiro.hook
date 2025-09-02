@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Pre-deployment Validation",
+  "description": "Full test suite before deployment - runs comprehensive tests, builds the application, and validates production readiness",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "package.json",
+      "deployment/production.config.js",
+      "Dockerfile.production",
+      "docker-compose.production.yml"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A deployment-related file has been modified. Please run the pre-deployment validation suite to ensure the application is ready for production deployment. Execute the following commands in sequence:\n\n1. Run comprehensive test suite: `npm run test:comprehensive`\n2. Build the application: `npm run build` \n3. Validate production configuration: `npm run validate:production`\n\nAfter completion, notify that deployment validation has been completed and report any issues found during the validation process."
+  }
+}

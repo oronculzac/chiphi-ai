@@ -1,0 +1,28 @@
+{
+  "name": "starbucks-receipt-spanish",
+  "description": "Starbucks receipt in Spanish requiring translation",
+  "language": "Spanish",
+  "email": {
+    "messageId": "<test-starbucks-es-001@starbucks.com>",
+    "from": "recibos@starbucks.com",
+    "to": "receipts-test123@chiphi.ai",
+    "subject": "Recibo de Starbucks - Gracias por su compra",
+    "body": "¡Gracias por visitar Starbucks!\n\nDetalles de la compra:\nFecha: 15 de enero de 2024\nHora: 08:30 AM\nTienda: Starbucks Centro Comercial\n\nArtículos:\n- Café Latte Grande - $5.95\n- Croissant de Almendras - $3.50\n- Propina - $1.50\n\nSubtotal: $9.45\nImpuestos: $0.76\nTotal: $10.21\n\nMétodo de pago: Tarjeta terminada en 5678\n\n¡Esperamos verte pronto!",
+    "mimeContent": "From: recibos@starbucks.com\nTo: receipts-test123@chiphi.ai\nSubject: Recibo de Starbucks - Gracias por su compra\nMessage-ID: <test-starbucks-es-001@starbucks.com>\nDate: Mon, 15 Jan 2024 08:30:00 +0000\nContent-Type: text/plain; charset=UTF-8\n\n¡Gracias por visitar Starbucks!\n\nDetalles de la compra:\nFecha: 15 de enero de 2024\nHora: 08:30 AM\nTienda: Starbucks Centro Comercial\n\nArtículos:\n- Café Latte Grande - $5.95\n- Croissant de Almendras - $3.50\n- Propina - $1.50\n\nSubtotal: $9.45\nImpuestos: $0.76\nTotal: $10.21\n\nMétodo de pago: Tarjeta terminada en 5678\n\n¡Esperamos verte pronto!",
+    "attachments": []
+  },
+  "expectedResult": {
+    "date": "2024-01-15",
+    "amount": 10.21,
+    "currency": "USD",
+    "merchant": "Starbucks",
+    "last4": "5678",
+    "category": "Food & Dining",
+    "subcategory": "Coffee",
+    "notes": "Café Latte Grande, Croissant de Almendras, Propina",
+    "confidence": 90,
+    "explanation": "Spanish Starbucks receipt translated to English. Clear coffee shop transaction categorized as Food & Dining/Coffee based on merchant and items purchased."
+  },
+  "tags": ["spanish", "starbucks", "coffee", "translation-required"],
+  "difficulty": "medium"
+}

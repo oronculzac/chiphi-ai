@@ -1,0 +1,28 @@
+{
+  "name": "complex-receipt-japanese",
+  "description": "Complex Japanese restaurant receipt with multiple items and tax calculations",
+  "language": "Japanese",
+  "email": {
+    "messageId": "<test-restaurant-jp-001@restaurant.co.jp>",
+    "from": "receipt@sushizen.co.jp",
+    "to": "receipts-test123@chiphi.ai",
+    "subject": "寿司禅 - お会計レシート",
+    "body": "寿司禅をご利用いただきありがとうございます。\n\nお会計詳細:\n日付: 2024年1月15日\n時間: 19:30\n店舗: 寿司禅 銀座店\nテーブル: 12番\n\nご注文内容:\n- 特上寿司セット - ¥3,800\n- 天ぷら盛り合わせ - ¥1,200\n- 生ビール (中) x2 - ¥1,400\n- 日本酒 (一合) - ¥800\n- お通し - ¥600\n\n小計: ¥7,800\n消費税 (10%): ¥780\n合計: ¥8,580\n\nお支払い方法: クレジットカード (****1357)\n\nまたのご来店をお待ちしております。",
+    "mimeContent": "From: receipt@sushizen.co.jp\nTo: receipts-test123@chiphi.ai\nSubject: 寿司禅 - お会計レシート\nMessage-ID: <test-restaurant-jp-001@restaurant.co.jp>\nDate: Mon, 15 Jan 2024 19:30:00 +0000\nContent-Type: text/plain; charset=UTF-8\n\n寿司禅をご利用いただきありがとうございます。\n\nお会計詳細:\n日付: 2024年1月15日\n時間: 19:30\n店舗: 寿司禅 銀座店\nテーブル: 12番\n\nご注文内容:\n- 特上寿司セット - ¥3,800\n- 天ぷら盛り合わせ - ¥1,200\n- 生ビール (中) x2 - ¥1,400\n- 日本酒 (一合) - ¥800\n- お通し - ¥600\n\n小計: ¥7,800\n消費税 (10%): ¥780\n合計: ¥8,580\n\nお支払い方法: クレジットカード (****1357)\n\nまたのご来店をお待ちしております。",
+    "attachments": []
+  },
+  "expectedResult": {
+    "date": "2024-01-15",
+    "amount": 8580,
+    "currency": "JPY",
+    "merchant": "Sushi Zen",
+    "last4": "1357",
+    "category": "Food & Dining",
+    "subcategory": "Restaurant",
+    "notes": "Premium sushi set, tempura, beer, sake, table charge",
+    "confidence": 85,
+    "explanation": "Japanese restaurant receipt translated to English. High-end sushi restaurant meal categorized as Food & Dining/Restaurant based on merchant type and itemized food/drink purchases."
+  },
+  "tags": ["japanese", "restaurant", "sushi", "complex-items", "translation-required"],
+  "difficulty": "hard"
+}

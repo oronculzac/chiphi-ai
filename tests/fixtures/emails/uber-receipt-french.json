@@ -1,0 +1,28 @@
+{
+  "name": "uber-receipt-french",
+  "description": "Uber ride receipt in French with complex formatting",
+  "language": "French",
+  "email": {
+    "messageId": "<test-uber-fr-001@uber.com>",
+    "from": "noreply@uber.com",
+    "to": "receipts-test123@chiphi.ai",
+    "subject": "Votre reçu Uber - Course terminée",
+    "body": "Merci d'avoir utilisé Uber!\n\nDétails de la course:\nDate: 15 janvier 2024\nHeure de départ: 14:30\nHeure d'arrivée: 15:15\n\nItinéraire:\nDépart: 123 Rue de la Paix, Paris\nArrivée: Aéroport Charles de Gaulle, Terminal 2E\n\nDistance: 32.5 km\nDurée: 45 minutes\n\nTarification:\nCourse de base: €28.50\nPéage: €3.20\nPourboire: €5.00\n\nTotal: €36.70\n\nMéthode de paiement: Carte se terminant par 9012\nChauffeur: Pierre M. (4.9★)\n\nMerci de votre confiance!",
+    "mimeContent": "From: noreply@uber.com\nTo: receipts-test123@chiphi.ai\nSubject: Votre reçu Uber - Course terminée\nMessage-ID: <test-uber-fr-001@uber.com>\nDate: Mon, 15 Jan 2024 15:15:00 +0000\nContent-Type: text/plain; charset=UTF-8\n\nMerci d'avoir utilisé Uber!\n\nDétails de la course:\nDate: 15 janvier 2024\nHeure de départ: 14:30\nHeure d'arrivée: 15:15\n\nItinéraire:\nDépart: 123 Rue de la Paix, Paris\nArrivée: Aéroport Charles de Gaulle, Terminal 2E\n\nDistance: 32.5 km\nDurée: 45 minutes\n\nTarification:\nCourse de base: €28.50\nPéage: €3.20\nPourboire: €5.00\n\nTotal: €36.70\n\nMéthode de paiement: Carte se terminant par 9012\nChauffeur: Pierre M. (4.9★)\n\nMerci de votre confiance!",
+    "attachments": []
+  },
+  "expectedResult": {
+    "date": "2024-01-15",
+    "amount": 36.70,
+    "currency": "EUR",
+    "merchant": "Uber",
+    "last4": "9012",
+    "category": "Transportation",
+    "subcategory": "Rideshare",
+    "notes": "Paris to Charles de Gaulle Airport, 32.5 km, 45 minutes",
+    "confidence": 88,
+    "explanation": "French Uber receipt translated to English. Airport ride categorized as Transportation/Rideshare based on service type and route details."
+  },
+  "tags": ["french", "uber", "transportation", "airport", "translation-required"],
+  "difficulty": "medium"
+}

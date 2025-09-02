@@ -1,0 +1,28 @@
+{
+  "name": "amazon-receipt-english",
+  "description": "Standard Amazon receipt in English with clear transaction details",
+  "language": "English",
+  "email": {
+    "messageId": "<test-amazon-001@amazon.com>",
+    "from": "auto-confirm@amazon.com",
+    "to": "receipts-test123@chiphi.ai",
+    "subject": "Your Amazon.com order #123-4567890-1234567",
+    "body": "Thank you for your Amazon order!\n\nOrder Details:\nOrder #: 123-4567890-1234567\nOrder Date: January 15, 2024\n\nItems Ordered:\n- Wireless Bluetooth Headphones - $89.99\n- USB-C Cable (6ft) - $12.99\n\nSubtotal: $102.98\nTax: $8.24\nTotal: $111.22\n\nPayment Method: Visa ending in 1234\n\nShipping Address:\nJohn Doe\n123 Main St\nAnytown, ST 12345\n\nThank you for shopping with Amazon!",
+    "mimeContent": "From: auto-confirm@amazon.com\nTo: receipts-test123@chiphi.ai\nSubject: Your Amazon.com order #123-4567890-1234567\nMessage-ID: <test-amazon-001@amazon.com>\nDate: Mon, 15 Jan 2024 12:00:00 +0000\nContent-Type: text/plain; charset=UTF-8\n\nThank you for your Amazon order!\n\nOrder Details:\nOrder #: 123-4567890-1234567\nOrder Date: January 15, 2024\n\nItems Ordered:\n- Wireless Bluetooth Headphones - $89.99\n- USB-C Cable (6ft) - $12.99\n\nSubtotal: $102.98\nTax: $8.24\nTotal: $111.22\n\nPayment Method: Visa ending in 1234\n\nShipping Address:\nJohn Doe\n123 Main St\nAnytown, ST 12345\n\nThank you for shopping with Amazon!",
+    "attachments": []
+  },
+  "expectedResult": {
+    "date": "2024-01-15",
+    "amount": 111.22,
+    "currency": "USD",
+    "merchant": "Amazon",
+    "last4": "1234",
+    "category": "Shopping",
+    "subcategory": "Electronics",
+    "notes": "Wireless Bluetooth Headphones, USB-C Cable",
+    "confidence": 95,
+    "explanation": "Clear Amazon receipt with order number, itemized purchases, and payment method. Categorized as Shopping/Electronics based on purchased items."
+  },
+  "tags": ["english", "amazon", "electronics", "clear-receipt"],
+  "difficulty": "easy"
+}

@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Playwright MCP Test Scaffold",
+  "description": "Scaffolds Playwright MCP tests for email processing workflows, creates Zod schemas for input/output validation, generates documentation stubs, and opens a PR with implementation checklist",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "tests/**",
+      "lib/types/**",
+      "docs/**",
+      "package.json"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Create a comprehensive Playwright MCP testing setup for the ChiPhi AI email receipt processing system. Include:\n\n1. **Test Structure**: Create `tests/` directory with:\n   - `tests/e2e/` for end-to-end email processing tests\n   - `tests/mcp/` for MCP server integration tests\n   - `tests/fixtures/` for test data and email samples\n\n2. **Playwright MCP Tests**: \n   - Email forwarding workflow tests\n   - Receipt extraction and translation tests\n   - AI categorization accuracy tests\n   - Dashboard real-time update tests\n   - Multi-tenant isolation verification tests\n\n3. **Zod Schemas**: Create in `lib/types/`:\n   - `test-schemas.ts` for test input/output validation\n   - Email processing pipeline schemas\n   - AI extraction result schemas\n   - Dashboard data schemas\n\n4. **Documentation**: Create in `docs/`:\n   - `testing-guide.md` with MCP setup instructions\n   - `playwright-patterns.md` with common test patterns\n   - `test-data-management.md` for fixture handling\n\n5. **Configuration**:\n   - Update `package.json` with Playwright dependencies\n   - Create `playwright.config.ts` with MCP server integration\n   - Add test scripts and CI/CD configuration\n\n6. **PR Checklist**: Create comprehensive checklist covering:\n   - Test coverage requirements\n   - MCP server configuration\n   - Schema validation\n   - Documentation completeness\n   - CI/CD integration\n\nFocus on the email-first, multilingual receipt processing workflows and ensure tests validate the AI extraction, translation, and categorization features with proper confidence scoring."
+  }
+}

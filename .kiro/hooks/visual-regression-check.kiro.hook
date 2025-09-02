@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "Visual Regression Check",
+  "description": "Run visual regression tests when UI files change",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.{tsx",
+      "css",
+      "scss}"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "UI files have been modified. Please run visual regression tests to ensure no unintended visual changes have been introduced. Execute: npm run test:visual -- --update-snapshots and then notify that visual regression tests have been completed."
+  }
+}
