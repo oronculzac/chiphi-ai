@@ -32,7 +32,11 @@ export class SESAdapter implements InboundEmailProvider {
     this.timeoutMs = timeoutMs;
     this.verifySignature = verifySignature;
 
-    if (!this.webhookSecret && config.app.isProduction && this.verifySignature) {
+    // Skip validation during build time
+    const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
+                       process.env.NODE_ENV === undefined;
+
+    if (!isBuildTime && !this.webhookSecret && config.app.isProduction && this.verifySignature) {
       throw new ProviderConfigurationError('ses', {
         message: 'SES_WEBHOOK_SECRET is required in production when signature verification is enabled',
       });

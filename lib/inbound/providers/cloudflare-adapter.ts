@@ -24,7 +24,11 @@ export class CloudflareAdapter implements InboundEmailProvider {
     this.webhookSecret = webhookSecret || config.inboundProvider.cloudflareSecret || '';
     this.timeoutMs = timeoutMs;
 
-    if (!this.webhookSecret && config.app.isProduction) {
+    // Skip validation during build time
+    const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
+                       process.env.NODE_ENV === undefined;
+    
+    if (!isBuildTime && !this.webhookSecret && config.app.isProduction) {
       throw new ProviderConfigurationError('cloudflare', {
         message: 'CLOUDFLARE_EMAIL_SECRET is required in production',
       });

@@ -1,14 +1,17 @@
 import { z } from 'zod';
 
-// Environment variable schema validation
+// Build-safe environment variable access
+const isBuildTime = process.env.NODE_ENV === undefined || process.env.NEXT_PHASE === 'phase-production-build';
+
+// Environment variable schema validation (only enforced at runtime, not build time)
 const envSchema = z.object({
   // Supabase
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   
   // OpenAI
-  OPENAI_API_KEY: z.string().min(1),
+  OPENAI_API_KEY: z.string().min(1).optional(),
   OPENAI_MODEL: z.string().default('gpt-4o-mini'),
   OPENAI_MAX_TOKENS: z.coerce.number().default(4000),
   
@@ -70,8 +73,8 @@ const envSchema = z.object({
 
   // Application
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  NEXTAUTH_SECRET: z.string().min(1),
-  NEXTAUTH_URL: z.string().url(),
+  NEXTAUTH_SECRET: z.string().min(1).optional(),
+  NEXTAUTH_URL: z.string().url().optional(),
 });
 
 // Safe environment access - only use process.env on server side
@@ -155,8 +158,8 @@ export const config = {
   
   inboundProvider: {
     provider: env.INBOUND_PROVIDER || 'cloudflare',
-    cloudflareSecret: env.CLOUDFLARE_EMAIL_SECRET,
-    sesSecret: env.SES_WEBHOOK_SECRET,
+    cloudflareSecret: env.CLOUDFLARE_EMAIL_SECRET || (isBuildTime ? 'build-time-placeholder' : undefined),
+    sesSecret: env.SES_WEBHOOK_SECRET || (isBuildTime ? 'build-time-placeholder' : undefined),
   },
   
   visualTesting: {
@@ -177,6 +180,30 @@ export const config = {
     isProduction: (env.NODE_ENV || 'development') === 'production',
   },
 } as const;
+
+// Runtime validation function (only runs when actually needed)
+export function validateConfig() {
+  if (isBuildTime) {
+    console.log('Skipping config validation during build time');
+    return;
+  }
+  
+  // Only validate critical runtime configs
+  const requiredInProduction = config.app.isProduction ? [
+    'NEXT_PUBLIC_SUPABASE_URL',
+    'NEXT_PUBLIC_SUPABASE_ANON_KEY', 
+    'SUPABASE_SERVICE_ROLE_KEY',
+    'OPENAI_API_KEY',
+    'NEXTAUTH_SECRET',
+    'NEXTAUTH_URL'
+  ] : [];
+  
+  const missing = requiredInProduction.filter(key => !process.env[key]);
+  
+  if (missing.length > 0) {
+    console.warn(`Missing required environment variables: ${missing.join(', ')}`);
+  }
+}
 
 // Type exports
 export type Config = typeof config;

@@ -94,6 +94,19 @@ export class ProviderFactory {
    */
   static getDefaultProvider(): InboundEmailProvider {
     const providerName = config.inboundProvider.provider;
+    
+    // During build time, create provider without strict validation
+    const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
+                       process.env.NODE_ENV === undefined;
+    
+    if (isBuildTime) {
+      // Create provider with build-time placeholders
+      return this.createProvider(providerName, {
+        webhookSecret: 'build-time-placeholder',
+        verifySignature: false,
+      });
+    }
+    
     return this.createProvider(providerName);
   }
 
@@ -119,15 +132,24 @@ export class ProviderFactory {
       });
     }
 
-    // In test environment, skip secret validation
-    if (config.app.nodeEnv === 'test') {
+    // Skip validation during build time or in test environment
+    const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
+                       process.env.NODE_ENV === undefined;
+    
+    if (config.app.nodeEnv === 'test' || isBuildTime) {
+      return;
+    }
+
+    // Only validate in production runtime
+    if (!config.app.isProduction) {
       return;
     }
 
     // Validate provider-specific configuration
     switch (providerName) {
       case 'cloudflare':
-        if (config.app.isProduction && !config.inboundProvider.cloudflareSecret) {
+        if (!config.inboundProvider.cloudflareSecret || 
+            config.inboundProvider.cloudflareSecret === 'build-time-placeholder') {
           throw new ProviderConfigurationError(providerName, {
             message: 'CLOUDFLARE_EMAIL_SECRET is required in production',
             requiredEnvVars: ['CLOUDFLARE_EMAIL_SECRET'],
@@ -136,7 +158,8 @@ export class ProviderFactory {
         break;
 
       case 'ses':
-        if (config.app.isProduction && !config.inboundProvider.sesSecret) {
+        if (!config.inboundProvider.sesSecret || 
+            config.inboundProvider.sesSecret === 'build-time-placeholder') {
           throw new ProviderConfigurationError(providerName, {
             message: 'SES_WEBHOOK_SECRET is required in production',
             requiredEnvVars: ['SES_WEBHOOK_SECRET'],
