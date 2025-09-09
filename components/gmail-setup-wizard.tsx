@@ -64,7 +64,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
   const [currentStep, setCurrentStep] = useState(1)
   const [inboxAlias, setInboxAlias] = useState<InboxAlias | null>(null)
   const [isCreatingAlias, setIsCreatingAlias] = useState(false)
-  const [verificationCode, setVerificationCode] = useState("")
+  const [verificationCode, setVerificationCode] = useState(&quot;&quot;)
   const [copiedItems, setCopiedItems] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isTestingSetup, setIsTestingSetup] = useState(false)
@@ -75,7 +75,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
 
   const filterString = inboxAlias 
     ? `to:(${inboxAlias.aliasEmail}) OR subject:(receipt OR invoice OR purchase OR confirmation)`
-    : ""
+    : &quot;&quot;
 
   // Load existing alias or create new one
   useEffect(() => {
@@ -267,7 +267,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    onClick={() => copyToClipboard(inboxAlias.aliasEmail, "alias")}
+                    onClick={() => copyToClipboard(inboxAlias.aliasEmail, &quot;alias&quot;)}
                     aria-label={`Copy email address ${inboxAlias.aliasEmail} to clipboard`}
                     className={isMobile ? 'w-full' : ''}
                   >
@@ -327,13 +327,13 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                   </div>
                   <div>
                     <p className="font-medium text-blue-900">Go to Settings → Forwarding and POP/IMAP</p>
-                    <p className="text-sm text-blue-700">Click the gear icon, then "See all settings"</p>
+                    <p className="text-sm text-blue-700">Click the gear icon, then &quot;See all settings&quot;</p>
                   </div>
                 </div>
               </div>
             </div>
             <Button
-              onClick={() => window.open("https://mail.google.com/mail/u/0/#settings/fwdandpop", "_blank")}
+              onClick={() => window.open(&quot;https://mail.google.com/mail/u/0/#settings/fwdandpop&quot;, "_blank")}
               className="w-full"
               variant="outline"
             >
@@ -359,7 +359,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                   <code className="text-sm font-mono bg-background px-3 py-2 rounded border flex-1">
                     {inboxAlias.aliasEmail}
                   </code>
-                  <Button size="sm" variant="outline" onClick={() => copyToClipboard(inboxAlias.aliasEmail, "step4-alias")}>
+                  <Button size="sm" variant="outline" onClick={() => copyToClipboard(inboxAlias.aliasEmail, &quot;step4-alias&quot;)}>
                     {copiedItems.includes("step4-alias") ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -372,7 +372,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                     <span className="text-amber-600 text-sm font-semibold">1</span>
                   </div>
                   <div>
-                    <p className="font-medium text-amber-900">Click "Add a forwarding address"</p>
+                    <p className="font-medium text-amber-900">Click &quot;Add a forwarding address&quot;</p>
                     <p className="text-sm text-amber-700">In the Forwarding section of Gmail settings</p>
                   </div>
                 </div>
@@ -412,7 +412,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                   placeholder="Enter verification code from Gmail"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value.toUpperCase())}
-                  className="text-center font-mono text-lg"
+                  className=&quot;text-center font-mono text-lg&quot;
                   aria-describedby="verification-code-desc"
                   autoComplete="off"
                 />
@@ -437,7 +437,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                 <div>
                   <p className="font-medium text-blue-900">Complete verification in Gmail</p>
                   <p className="text-sm text-blue-700">
-                    Go back to Gmail, enter this code in the verification dialog, and click "Verify"
+                    Go back to Gmail, enter this code in the verification dialog, and click &quot;Verify&quot;
                   </p>
                 </div>
               </div>
@@ -461,7 +461,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                   <code className="text-sm font-mono bg-background px-3 py-2 rounded border flex-1 break-all">
                     {filterString}
                   </code>
-                  <Button size="sm" variant="outline" onClick={() => copyToClipboard(filterString, "filter")}>
+                  <Button size="sm" variant="outline" onClick={() => copyToClipboard(filterString, &quot;filter&quot;)}>
                     {copiedItems.includes("filter") ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -475,7 +475,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                   </div>
                   <div>
                     <p className="font-medium text-purple-900">Go to Gmail Filters & Blocked Addresses</p>
-                    <p className="text-sm text-purple-700">In Settings, click "Filters and Blocked Addresses"</p>
+                    <p className="text-sm text-purple-700">In Settings, click &quot;Filters and Blocked Addresses&quot;</p>
                   </div>
                 </div>
               </div>
@@ -486,7 +486,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                   </div>
                   <div>
                     <p className="font-medium text-purple-900">Create new filter with the criteria above</p>
-                    <p className="text-sm text-purple-700">Set action to "Forward to" your verified address</p>
+                    <p className="text-sm text-purple-700">Set action to &quot;Forward to&quot; your verified address</p>
                   </div>
                 </div>
               </div>
@@ -496,14 +496,14 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                     <span className="text-purple-600 text-sm font-semibold">3</span>
                   </div>
                   <div>
-                    <p className="font-medium text-purple-900">Enable "Also apply filter to matching conversations"</p>
+                    <p className="font-medium text-purple-900">Enable &quot;Also apply filter to matching conversations&quot;</p>
                     <p className="text-sm text-purple-700">This will forward existing receipts in your inbox</p>
                   </div>
                 </div>
               </div>
             </div>
             <Button
-              onClick={() => window.open("https://mail.google.com/mail/u/0/#settings/filters", "_blank")}
+              onClick={() => window.open(&quot;https://mail.google.com/mail/u/0/#settings/filters&quot;, "_blank")}
               className="w-full"
               variant="outline"
             >
@@ -529,7 +529,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                 <div>
                   <p className="font-medium text-blue-900">How to test</p>
                   <p className="text-sm text-blue-700">
-                    Send a test email with "receipt" in the subject line to yourself, or forward an existing receipt email.
+                    Send a test email with &quot;receipt&quot; in the subject line to yourself, or forward an existing receipt email.
                     The system should automatically process it within 60 seconds.
                   </p>
                 </div>
@@ -568,7 +568,7 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
                 )}
               </Button>
               <div id="test-setup-desc" className="sr-only">
-                Test your Gmail forwarding configuration to ensure it's working correctly
+                Test your Gmail forwarding configuration to ensure it&apos;s working correctly
               </div>
               <Button
                 onClick={nextStep}

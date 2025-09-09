@@ -275,7 +275,7 @@ export default function InboundEmailTab() {
                           No verification code received
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          Click "Get Verification Code" to start polling
+                          Click &quot;Get Verification Code&quot; to start polling
                         </div>
                       </div>
                     </>
@@ -342,17 +342,17 @@ export default function InboundEmailTab() {
                   <strong>How to test:</strong>
                 </p>
                 <ol className="list-decimal list-inside space-y-1 ml-2">
-                  <li>Click "Get Verification Code" to start polling</li>
-                  <li>Send an email to your alias with "VERIFY" in the subject</li>
+                  <li>Click &quot;Get Verification Code&quot; to start polling</li>
+                  <li>Send an email to your alias with &quot;VERIFY&quot; in the subject</li>
                   <li>The system will automatically detect and display the verification code</li>
-                  <li>A green "Verified" status indicates your email forwarding is working</li>
+                  <li>A green &quot;Verified&quot; status indicates your email forwarding is working</li>
                 </ol>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Show error alert if there's an error but we have data */}
+        {/* Show error alert if there&apos;s an error but we have data */}
         {error && alias && (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />

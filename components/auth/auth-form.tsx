@@ -287,7 +287,7 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
               <p>
-                We'll send you a secure link to sign in without a password.
+                We&apos;ll send you a secure link to sign in without a password.
               </p>
             </div>
           </TabsContent>

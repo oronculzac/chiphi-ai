@@ -58,11 +58,11 @@ export function ComponentIntegrityCheck() {
         // Try to dynamically import the component
         const componentPath = check.path.replace('@/', './');
         
-        // Since we can't actually dynamically import in this context,
+        // Since we can&apos;t actually dynamically import in this context,
         // we'll simulate the check by looking for the component in the DOM
-        // or checking if it's been used in the current page
+        // or checking if it&apos;s been used in the current page
         
-        // For now, we'll assume all components are available since they're in the project
+        // For now, we'll assume all components are available since they&apos;re in the project
         // In a real implementation, you would use dynamic imports or check the file system
         check.status = 'available';
         

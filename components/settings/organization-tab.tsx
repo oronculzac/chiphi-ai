@@ -294,7 +294,7 @@ export default function OrganizationTab() {
         {/* Members Management Section */}
         <MembersManagementSection disabled={loading} />
 
-        {/* Show error alert if there's an error but we have data */}
+        {/* Show error alert if there&apos;s an error but we have data */}
         {error && organization && (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />

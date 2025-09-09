@@ -127,7 +127,7 @@ export default function IntegrationsTab() {
         <CardHeader>
           <CardTitle className="text-base">More Integrations Coming Soon</CardTitle>
           <CardDescription>
-            We're working on additional integrations to make your financial workflow even more seamless.
+            We&apos;re working on additional integrations to make your financial workflow even more seamless.
           </CardDescription>
         </CardHeader>
         <CardContent>

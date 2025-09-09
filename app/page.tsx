@@ -11,10 +11,10 @@ export default function HomePage() {
   const [shouldRedirect, setShouldRedirect] = useState(false)
 
   useEffect(() => {
-    // Only redirect if we're not loading and user is authenticated
+    // Only redirect if we&apos;re not loading and user is authenticated
     if (!isLoading && user && !shouldRedirect) {
       setShouldRedirect(true)
-      router.push("/dashboard")
+      router.push(&quot;/dashboard&quot;)
     }
   }, [user, isLoading, router, shouldRedirect])
 

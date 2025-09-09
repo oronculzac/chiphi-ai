@@ -238,7 +238,7 @@ export default function DemoPage() {
                     AI Explanation
                   </h4>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Categorized as "Food & Dining" because the merchant "Starbucks Coffee" is a well-known 
+                    Categorized as &quot;Food &amp; Dining&quot; because the merchant &quot;Starbucks Coffee&quot; is a well-known 
                     coffee shop chain, and the items purchased (Grande Latte, Blueberry Muffin) are food 
                     and beverage items. Confidence is high due to clear merchant identification and 
                     typical food service transaction pattern.

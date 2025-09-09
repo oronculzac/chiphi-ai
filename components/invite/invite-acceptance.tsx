@@ -41,11 +41,11 @@ export default function InviteAcceptance({ token, invitation }: InviteAcceptance
       const { data: { user }, error } = await supabase.auth.getUser();
       setUser(user);
       
-      // If user is signed in but email doesn't match invitation
+      // If user is signed in but email doesn&apos;t match invitation
       if (user && user.email !== invitation.email) {
         toast({
           title: 'Email Mismatch',
-          description: `This invitation is for ${invitation.email}, but you're signed in as ${user.email}. Please sign out and sign in with the correct email.`,
+          description: `This invitation is for ${invitation.email}, but you&apos;re signed in as ${user.email}. Please sign out and sign in with the correct email.`,
           variant: 'destructive',
         });
       }
@@ -200,7 +200,7 @@ export default function InviteAcceptance({ token, invitation }: InviteAcceptance
               </div>
               <Button
                 onClick={() => supabase.auth.signOut().then(() => router.push(`/auth/signin?email=${encodeURIComponent(invitation.email)}`))}
-                variant="outline"
+                variant=&quot;outline&quot;
                 className="w-full"
               >
                 Sign Out and Sign In with Correct Email

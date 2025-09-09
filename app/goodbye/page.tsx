@@ -20,7 +20,7 @@ export default function GoodbyePage() {
           <CardContent className="space-y-6">
             <div className="text-center space-y-4">
               <p className="text-sm text-muted-foreground">
-                Thank you for using ChiPhi AI. We're sorry to see you go.
+                Thank you for using ChiPhi AI. We&apos;re sorry to see you go.
               </p>
               
               <div className="bg-muted/50 rounded-lg p-4 text-left">

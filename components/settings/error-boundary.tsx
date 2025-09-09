@@ -118,7 +118,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </CardTitle>
             <CardDescription>
               {isolateErrors 
-                ? "This section encountered an error, but other parts of the page should still work."
+                ? &quot;This section encountered an error, but other parts of the page should still work.&quot;
                 : "There was an error loading this content. This might be a temporary issue."
               }
             </CardDescription>
@@ -194,7 +194,7 @@ export function SettingsTabErrorBoundary({
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Error in {tabName} Tab</AlertTitle>
             <AlertDescription className="mt-2">
-              This tab encountered an error and couldn't load properly. 
+              This tab encountered an error and couldn&apos;t load properly. 
               Other tabs should still work normally.
             </AlertDescription>
           </Alert>
@@ -202,7 +202,7 @@ export function SettingsTabErrorBoundary({
           <div className="mt-4 flex gap-3">
             <Button 
               onClick={() => window.location.reload()} 
-              variant="outline"
+              variant=&quot;outline&quot;
               className="flex items-center gap-2"
             >
               <RefreshCw className="h-4 w-4" />

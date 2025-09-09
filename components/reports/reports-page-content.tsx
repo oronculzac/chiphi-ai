@@ -24,7 +24,7 @@ function ComingSoonFeature() {
         
         <h2 className="text-3xl font-bold mb-4">Advanced Reports Coming Soon</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-          We're building powerful analytics and reporting features to help you gain deeper insights into your spending patterns.
+          We&apos;re building powerful analytics and reporting features to help you gain deeper insights into your spending patterns.
         </p>
         
         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
@@ -98,7 +98,7 @@ function ComingSoonFeature() {
 
       {/* Current Features */}
       <div className="text-center">
-        <h3 className="text-lg font-semibold mb-4">In the meantime, explore what's available now:</h3>
+        <h3 className="text-lg font-semibold mb-4">In the meantime, explore what&apos;s available now:</h3>
         <div className="flex flex-wrap justify-center gap-3">
           <Button variant="outline" onClick={() => window.location.href = '/dashboard'}>
             View Dashboard
@@ -186,7 +186,7 @@ function OrganizationSetupCard() {
                     setOrgName(e.target.value);
                     setError('');
                   }}
-                  placeholder="Enter your organization name"
+                  placeholder=&quot;Enter your organization name&quot;
                   className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                   disabled={isCreating}
                 />
@@ -217,7 +217,7 @@ function OrganizationSetupCard() {
                 You can also set up your organization from the{' '}
                 <button 
                   onClick={() => window.location.href = '/dashboard'}
-                  className="text-primary hover:underline"
+                  className=&quot;text-primary hover:underline&quot;
                 >
                   dashboard
                 </button>
@@ -258,7 +258,7 @@ const ReportsPageContent = memo(function ReportsPageContent({ searchParams }: Re
   // TODO: Re-enable reports functionality once the root cause is fixed
   circuitBreakerRef.current = true;
   
-  // ALWAYS call all hooks to avoid "Rendered fewer hooks than expected" error
+  // ALWAYS call all hooks to avoid &quot;Rendered fewer hooks than expected&quot; error
   // Use the new reports filters hook for state management and URL synchronization
   const {
     filters,

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import AuthForm from "@/components/auth/auth-form"
 import {
@@ -12,7 +12,6 @@ import {
   Brain,
   BarChart3,
   Shield,
-  Globe,
   Zap,
   FileText,
   Download,
@@ -24,7 +23,6 @@ import {
   Languages,
   Target,
   TrendingUp,
-  X,
 } from "lucide-react"
 
 interface LandingPageProps {
@@ -147,7 +145,7 @@ function LandingPage({ showAuthForm = false }: LandingPageProps) {
                 </div>
                 <h3 className="text-xl font-semibold mb-3">AI parses & translates</h3>
                 <p className="text-muted-foreground">
-                  Extract merchant, date, amount, category + 'Why' explanations with confidence scores
+                  Extract merchant, date, amount, category + &apos;Why&apos; explanations with confidence scores
                 </p>
               </div>
               

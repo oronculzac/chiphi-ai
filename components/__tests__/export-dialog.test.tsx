@@ -128,7 +128,7 @@ describe('ExportDialog', () => {
       }
     });
 
-    // Should handle the error (we can't easily test toast calls in this setup)
+    // Should handle the error (we can&apos;t easily test toast calls in this setup)
     await waitFor(() => {
       expect(mockOnExport).toHaveBeenCalled();
     });
