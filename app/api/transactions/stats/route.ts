@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { transactionProcessor } from '@/lib/services/transaction-processor';
-import { transactionDb } from '@/lib/database/transaction-operations';
 import { getUserSession } from '@/lib/database/utils';
+import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 
 /**
@@ -43,38 +42,82 @@ export async function GET(request: NextRequest) {
     
     const validatedParams = statsQuerySchema.parse(queryParams);
 
-    // Build date range if provided
-    const dateRange = validatedParams.startDate && validatedParams.endDate
-      ? { start: validatedParams.startDate, end: validatedParams.endDate }
-      : undefined;
+    // Set default date range to current month (Month to Date)
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // getMonth() returns 0-11
+    const startOfMonth = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-01`;
+    const endOfMonth = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${new Date(currentYear, currentMonth, 0).getDate()}`;
+    
+    const startDate = validatedParams.startDate || startOfMonth;
+    const endDate = validatedParams.endDate || endOfMonth;
 
-    // Get transaction statistics
-    const stats = await transactionProcessor.getTransactionStats(
-      session.org.id,
-      dateRange
-    );
+    const supabase = await createClient();
 
-    // Get integrity check if requested
-    let integrityIssues = undefined;
-    if (validatedParams.includeIntegrity) {
-      integrityIssues = await transactionDb.validateTransactionIntegrity(
-        session.org.id
-      );
+    // Get month-to-date totals
+    const { data: totalsData, error: totalsError } = await supabase.rpc('fn_report_totals', {
+      p_org_id: session.org.id,
+      p_start_date: startDate,
+      p_end_date: endDate
+    });
+
+    if (totalsError) {
+      throw totalsError;
     }
 
-    // Get recent transactions for dashboard
-    const recentTransactions = await transactionDb.getRecentTransactions(
-      session.org.id,
-      5
-    );
+    // Get category breakdown
+    const { data: categoryData, error: categoryError } = await supabase.rpc('fn_report_by_category', {
+      p_org_id: session.org.id,
+      p_start_date: startDate,
+      p_end_date: endDate,
+      p_categories: null
+    });
+
+    if (categoryError) {
+      throw categoryError;
+    }
+
+    // Get daily spending trend
+    const { data: dailyData, error: dailyError } = await supabase.rpc('fn_report_daily', {
+      p_org_id: session.org.id,
+      p_start_date: startDate,
+      p_end_date: endDate,
+      p_categories: null,
+      p_search: null
+    });
+
+    if (dailyError) {
+      throw dailyError;
+    }
+
+    // Get recent transactions
+    const { data: recentTransactions, error: recentError } = await supabase
+      .from('transactions')
+      .select('*')
+      .eq('org_id', session.org.id)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    if (recentError) {
+      throw recentError;
+    }
 
     return NextResponse.json({
       success: true,
       data: {
-        ...stats,
-        recentTransactions,
-        ...(integrityIssues && { integrityIssues }),
-        dateRange,
+        monthToDateTotal: Number(totalsData?.[0]?.current_total || 0),
+        categoryBreakdown: (categoryData || []).map((item: any) => ({
+          category: item.category,
+          amount: Number(item.amount),
+          percentage: Number(item.percentage),
+          count: Number(item.count)
+        })),
+        spendingTrend: (dailyData || []).map((item: any) => ({
+          date: item.date,
+          amount: Number(item.amount)
+        })),
+        recentTransactions: recentTransactions || [],
+        dateRange: { start: startDate, end: endDate },
         generatedAt: new Date().toISOString(),
       },
     });

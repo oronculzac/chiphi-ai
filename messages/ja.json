@@ -1,0 +1,270 @@
+{
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "retry": "再試行",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "search": "検索",
+    "filter": "フィルター",
+    "export": "エクスポート",
+    "import": "インポート",
+    "refresh": "更新",
+    "settings": "設定",
+    "help": "ヘルプ",
+    "logout": "ログアウト",
+    "login": "ログイン",
+    "signup": "サインアップ",
+    "dashboard": "ダッシュボード",
+    "reports": "レポート",
+    "transactions": "取引",
+    "categories": "カテゴリ",
+    "profile": "プロフィール"
+  },
+  "navigation": {
+    "home": "ホーム",
+    "dashboard": "ダッシュボード",
+    "reports": "レポート",
+    "transactions": "取引",
+    "settings": "設定"
+  },
+  "reports": {
+    "title": "レポート",
+    "monthToDate": "月初から現在まで",
+    "totalSpent": "総支出",
+    "categoryBreakdown": "カテゴリ別内訳",
+    "dailySpending": "日次支出",
+    "noData": "データがありません",
+    "exportCsv": "CSV エクスポート",
+    "exportYnab": "YNAB エクスポート",
+    "dateRange": "日付範囲",
+    "from": "開始日",
+    "to": "終了日",
+    "category": "カテゴリ",
+    "allCategories": "すべてのカテゴリ",
+    "searchTransactions": "取引を検索..."
+  },
+  "transactions": {
+    "title": "取引",
+    "date": "日付",
+    "amount": "金額",
+    "merchant": "店舗",
+    "category": "カテゴリ",
+    "subcategory": "サブカテゴリ",
+    "notes": "メモ",
+    "confidence": "信頼度",
+    "noTransactions": "取引が見つかりません",
+    "addTransaction": "取引を追加",
+    "editTransaction": "取引を編集",
+    "deleteTransaction": "取引を削除"
+  },
+  "auth": {
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "signOut": "サインアウト",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "forgotPassword": "パスワードを忘れましたか？",
+    "resetPassword": "パスワードリセット",
+    "createAccount": "アカウント作成",
+    "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+    "dontHaveAccount": "アカウントをお持ちでないですか？"
+  },
+  "errors": {
+    "generic": "何かが間違っています。もう一度お試しください。",
+    "network": "ネットワークエラー。接続を確認してください。",
+    "unauthorized": "この操作を実行する権限がありません。",
+    "notFound": "要求されたリソースが見つかりません。",
+    "validation": "入力を確認してもう一度お試しください。",
+    "server": "サーバーエラー。後でもう一度お試しください。"
+  },
+  "settings": {
+    "common": {
+      "save": "保存",
+      "cancel": "キャンセル",
+      "edit": "編集",
+      "delete": "削除",
+      "loading": "読み込み中...",
+      "retry": "再試行",
+      "error": "エラー",
+      "success": "成功",
+      "confirm": "確認",
+      "close": "閉じる",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "required": "必須",
+      "optional": "任意",
+      "enabled": "有効",
+      "disabled": "無効"
+    },
+    "tabs": {
+      "organization": "組織",
+      "inboundEmail": "受信メール",
+      "notifications": "通知",
+      "data": "データ",
+      "integrations": "連携"
+    },
+    "organization": {
+      "title": "組織設定",
+      "description": "組織の詳細とチームメンバーを管理します。",
+      "name": {
+        "label": "組織名",
+        "placeholder": "組織名を入力",
+        "required": "組織名は必須です",
+        "maxLength": "組織名は100文字未満である必要があります",
+        "saving": "保存中...",
+        "saved": "組織名を保存しました"
+      },
+      "logo": {
+        "title": "組織ロゴ",
+        "description": "組織のロゴをアップロードします。対応形式：JPEG、PNG、WebP。最大サイズ：5MB。",
+        "upload": "ロゴをアップロード",
+        "remove": "ロゴを削除",
+        "uploading": "アップロード中...",
+        "uploaded": "ロゴのアップロードが完了しました",
+        "removed": "ロゴを削除しました",
+        "error": "ロゴのアップロードに失敗しました",
+        "invalidType": "無効なファイル形式です。JPEG、PNG、またはWebPをアップロードしてください。",
+        "tooLarge": "ファイルが大きすぎます。最大サイズは{maxSize}です。"
+      },
+      "members": {
+        "title": "チームメンバー",
+        "description": "チームメンバーを招待し、役割を管理します。",
+        "invite": "メンバーを招待",
+        "email": "メールアドレス",
+        "role": "役割",
+        "joinedAt": "参加日",
+        "actions": "操作",
+        "roles": {
+          "owner": "オーナー",
+          "admin": "管理者",
+          "member": "メンバー"
+        }
+      }
+    },
+    "inboundEmail": {
+      "title": "受信メール設定",
+      "description": "レシート処理用の固有メールアドレスを設定します。",
+      "alias": {
+        "title": "レシート用メールアドレス",
+        "description": "自動処理のためにこのメールアドレスにレシートを転送してください。",
+        "copy": "メールをコピー",
+        "copied": "メールアドレスをクリップボードにコピーしました"
+      },
+      "verification": {
+        "title": "メール認証",
+        "description": "メール設定が正しく動作することを確認します。",
+        "status": "ステータス",
+        "lastReceived": "最後に受信したメール",
+        "noEmails": "まだメールを受信していません",
+        "getCode": "テストメールを送信",
+        "gettingCode": "送信中...",
+        "verified": "認証済み",
+        "pending": "保留中",
+        "codeReceived": "認証コード：{code}",
+        "codeExpires": "コードの有効期限：{time}"
+      }
+    },
+    "notifications": {
+      "title": "通知設定",
+      "description": "通知を受け取るタイミングと方法を設定します。",
+      "types": {
+        "receiptProcessed": {
+          "label": "レシート処理完了",
+          "description": "レシートが正常に処理されたときに通知を受け取る"
+        },
+        "dailySummary": {
+          "label": "日次サマリー",
+          "description": "取引の日次サマリーを受け取る"
+        },
+        "weeklySummary": {
+          "label": "週次サマリー",
+          "description": "支出の週次サマリーを受け取る"
+        }
+      },
+      "emails": {
+        "title": "通知メール",
+        "description": "通知を受け取るメールアドレスを追加します。",
+        "add": "メールを追加",
+        "placeholder": "メールアドレスを入力",
+        "adding": "追加中...",
+        "added": "メールアドレスを追加しました",
+        "remove": "削除",
+        "removing": "削除中...",
+        "removed": "メールアドレスを削除しました",
+        "invalid": "有効なメールアドレスを入力してください",
+        "duplicate": "このメールアドレスは既に追加されています"
+      },
+      "saving": "設定を保存中...",
+      "saved": "設定を保存しました",
+      "error": "設定の保存に失敗しました"
+    },
+    "data": {
+      "title": "データ管理",
+      "description": "データをエクスポートし、アカウントを管理します。",
+      "export": {
+        "title": "データエクスポート",
+        "description": "取引データを様々な形式でダウンロードします。",
+        "dateRange": {
+          "label": "日付範囲",
+          "start": "開始日",
+          "end": "終了日",
+          "invalid": "有効な日付範囲を選択してください"
+        },
+        "format": {
+          "label": "エクスポート形式",
+          "csv": "CSV（カンマ区切り値）",
+          "ynab": "YNAB（You Need A Budget）"
+        },
+        "buttons": {
+          "csv": "CSVとしてエクスポート",
+          "ynab": "YNAB用にエクスポート",
+          "exporting": "エクスポート中...",
+          "exported": "エクスポートが完了しました"
+        }
+      },
+      "dangerZone": {
+        "title": "危険な操作",
+        "description": "データを永続的に削除する取り消し不可能な操作。",
+        "deleteAccount": {
+          "title": "組織を削除",
+          "description": "組織と関連するすべてのデータを永続的に削除します。",
+          "button": "組織を削除",
+          "dialog": {
+            "title": "組織を削除",
+            "description": "この操作は取り消すことができません。すべてのデータが永続的に削除されます。",
+            "warning": "削除を確認するために「{organizationName}」と入力してください。",
+            "placeholder": "組織名をここに入力",
+            "mismatch": "組織名が一致しません",
+            "confirm": "永続的に削除",
+            "cancel": "キャンセル",
+            "deleting": "削除中...",
+            "deleted": "組織を削除しました"
+          }
+        }
+      }
+    },
+    "integrations": {
+      "title": "連携",
+      "description": "ChiPhi AIをお気に入りのツールやサービスと連携させます。",
+      "comingSoon": "近日公開",
+      "googleSheets": {
+        "title": "Google Sheets",
+        "description": "取引をGoogle Sheetsに自動同期",
+        "tooltip": "Google Sheets連携は近日利用可能になります"
+      },
+      "notion": {
+        "title": "Notion",
+        "description": "取引データでNotionデータベースを作成・更新",
+        "tooltip": "Notion連携は近日利用可能になります"
+      }
+    }
+  }
+}

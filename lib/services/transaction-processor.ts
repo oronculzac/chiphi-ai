@@ -137,6 +137,71 @@ export class TransactionProcessor {
   }
 
   /**
+   * Create transaction record from SES processing result with enhanced AI pipeline support
+   * Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
+   */
+  async createTransactionFromSESResult(
+    emailId: string,
+    orgId: string,
+    processingResult: any,
+    userId?: string
+  ): Promise<Transaction> {
+    const { receiptData, translationResult, processingMetadata, fallbackUsed } = processingResult;
+
+    // Prepare transaction data with SES-specific enhancements
+    const transactionData: InsertTransaction = {
+      org_id: orgId,
+      email_id: emailId,
+      date: receiptData.date,
+      amount: receiptData.amount,
+      currency: receiptData.currency,
+      merchant: receiptData.merchant,
+      last4: this.extractLast4(receiptData.last4),
+      category: receiptData.category,
+      subcategory: receiptData.subcategory,
+      notes: this.redactPII(receiptData.notes || ''),
+      confidence: receiptData.confidence,
+      explanation: receiptData.explanation,
+      original_text: this.redactPII(translationResult.originalText),
+      translated_text: processingMetadata?.wasTranslated 
+        ? this.redactPII(translationResult.translatedText) 
+        : null,
+      source_language: processingMetadata?.wasTranslated 
+        ? translationResult.sourceLanguage 
+        : null
+    };
+
+    // Add fallback processing indicator if used
+    if (fallbackUsed) {
+      const fallbackNote = '[FALLBACK] Processed using fallback categorization due to AI service unavailability';
+      transactionData.notes = transactionData.notes 
+        ? `${transactionData.notes}\n\n${fallbackNote}`
+        : fallbackNote;
+    }
+
+    // Add SES-specific metadata to notes if available
+    if (processingResult.rawRef) {
+      const sesMetadata = `[SES_REF] ${processingResult.rawRef}`;
+      transactionData.notes = transactionData.notes 
+        ? `${transactionData.notes}\n\n${sesMetadata}`
+        : sesMetadata;
+    }
+
+    // Insert transaction using admin client for RLS bypass
+    const { data, error } = await this.adminSupabase
+      .from('transactions')
+      .insert(transactionData)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to create SES transaction: ${error.message}`);
+    }
+
+    return data;
+  }
+
+  /**
    * Create transaction record from AI processing result
    * Requirements: 3.1, 3.2, 3.3
    */
@@ -564,34 +629,62 @@ export class TransactionProcessor {
     recentTransactions: Transaction[];
   }> {
     try {
-      // Use the comprehensive analytics database function for better performance
-      const { data, error } = await this.supabase.rpc('get_comprehensive_analytics', {
-        org_uuid: orgId
+      // Set default date range to current month if not provided
+      const startDate = dateRange?.start || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+      const endDate = dateRange?.end || new Date().toISOString().split('T')[0];
+
+      // Get month-to-date totals
+      const { data: totalsData, error: totalsError } = await this.supabase.rpc('fn_report_totals', {
+        p_org_id: orgId,
+        p_start_date: startDate,
+        p_end_date: endDate
       });
 
-      if (error) {
-        throw error;
+      if (totalsError) {
+        throw totalsError;
       }
 
-      const analytics = data[0];
-      if (!analytics) {
-        // Return empty analytics if no data
-        return {
-          monthToDateTotal: 0,
-          categoryBreakdown: [],
-          spendingTrend: [],
-          recentTransactions: []
-        };
+      // Get category breakdown
+      const { data: categoryData, error: categoryError } = await this.supabase.rpc('fn_report_by_category', {
+        p_org_id: orgId,
+        p_start_date: startDate,
+        p_end_date: endDate,
+        p_categories: null
+      });
+
+      if (categoryError) {
+        throw categoryError;
+      }
+
+      // Get daily spending trend
+      const { data: dailyData, error: dailyError } = await this.supabase.rpc('fn_report_daily', {
+        p_org_id: orgId,
+        p_start_date: startDate,
+        p_end_date: endDate,
+        p_categories: null,
+        p_search: null
+      });
+
+      if (dailyError) {
+        throw dailyError;
       }
 
       // Get recent transactions separately for better control
       const recentTransactions = await transactionDb.getRecentTransactions(orgId, 10);
 
       return {
-        monthToDateTotal: Number(analytics.month_to_date_total || 0),
-        categoryBreakdown: analytics.category_breakdown || [],
-        spendingTrend: analytics.spending_trend || [],
-        recentTransactions
+        monthToDateTotal: Number(totalsData?.[0]?.current_total || 0),
+        categoryBreakdown: (categoryData || []).map((item: any) => ({
+          category: item.category,
+          amount: Number(item.amount),
+          percentage: Number(item.percentage),
+          count: Number(item.count)
+        })),
+        spendingTrend: (dailyData || []).map((item: any) => ({
+          date: item.date,
+          amount: Number(item.amount)
+        })),
+        recentTransactions: recentTransactions || []
       };
 
     } catch (error) {

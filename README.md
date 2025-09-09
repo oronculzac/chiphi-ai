@@ -23,7 +23,7 @@ An intelligent, multilingual receipt processing system that automatically transl
 - **Email Processing**: AWS SES + Lambda (Node.js 20.x) + S3
 - **Testing**: Playwright + Vitest with comprehensive test coverage
 - **Deployment**: AWS Amplify with email infrastructure on AWS
-- **Development**: Built with [Kiro AI IDE](https://kiro.ai) 🤖
+- **Development**: Built with [Kiro AI IDE](https://kiro.dev) 🤖
 
 ## 🏗 Architecture
 
@@ -151,6 +151,6 @@ For issues and questions:
 
 ---
 
-**Developed with [Kiro AI IDE](https://kiro.ai)** 🤖 - The AI-powered development environment
+**Developed with [Kiro AI IDE](https://kiro.dev)** 🤖 - The AI-powered development environment
 
 Built with ❤️ using Next.js, Supabase, OpenAI, and AWS

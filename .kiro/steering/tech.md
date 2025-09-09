@@ -11,6 +11,8 @@
 - **Supabase Auth** - Authentication and user management
 - **Row Level Security (RLS)** - Multi-tenant data isolation
 - **Database migrations** - Version-controlled schema changes in `supabase/migrations/`
+- **Database Functions (RPCs)** - Optimized report aggregation functions (fn_report_totals, fn_report_by_category, fn_report_daily)
+- **Performance Indexes** - Optimized indexes for report queries on transactions table
 
 ## AI & Processing
 - **OpenAI GPT-4o-mini** - Receipt extraction and translation

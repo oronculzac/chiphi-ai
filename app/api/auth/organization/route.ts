@@ -1,62 +1,119 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ServerAuthService } from '@/lib/services/server-auth';
+import { createClient } from '@/lib/supabase/server';
 import { OrganizationService } from '@/lib/services/organization';
-import { InboxAliasService } from '@/lib/services/inbox-alias';
 import { z } from 'zod';
 
+// Validation schema for creating organization
 const createOrganizationSchema = z.object({
-  name: z.string().min(1, 'Organization name is required').max(100, 'Organization name too long'),
-  userId: z.string().uuid(),
+  name: z.string().min(1, 'Organization name is required').max(100, 'Organization name must be less than 100 characters').trim(),
 });
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify user is authenticated
-    const user = await ServerAuthService.getCurrentUser();
-    if (!user) {
+    const body = await request.json();
+    const { name } = createOrganizationSchema.parse(body);
+
+    const supabase = await createClient();
+    
+    // Get current user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { name, userId } = createOrganizationSchema.parse(body);
+    // Check if user already has an organization
+    const { data: existingMembership } = await supabase
+      .from('org_members')
+      .select('org_id')
+      .eq('user_id', user.id)
+      .limit(1)
+      .single();
 
-    // Verify the user is creating an organization for themselves
-    if (user.id !== userId) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (existingMembership) {
+      return NextResponse.json({ 
+        error: 'You already belong to an organization' 
+      }, { status: 400 });
     }
 
-    // Create the organization
-    const { organization, error: orgError } = await OrganizationService.createOrganization({
+    // Create organization
+    const { organization, error } = await OrganizationService.createOrganization({
       name,
-      userId,
+      userId: user.id,
     });
 
-    if (orgError || !organization) {
-      return NextResponse.json({ error: orgError || 'Failed to create organization' }, { status: 400 });
-    }
-
-    // Create an inbox alias for the organization
-    const { alias, error: aliasError } = await InboxAliasService.createInboxAlias(organization.id);
-
-    if (aliasError) {
-      console.error('Failed to create inbox alias:', aliasError);
-      // Don't fail the organization creation, just log the error
+    if (error || !organization) {
+      return NextResponse.json({ 
+        error: error || 'Failed to create organization' 
+      }, { status: 500 });
     }
 
     return NextResponse.json({
+      success: true,
       organization,
-      alias,
     });
+
   } catch (error) {
-    console.error('Organization creation error:', error);
-    
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
+        { error: error.errors[0]?.message || 'Invalid input' },
         { status: 400 }
       );
     }
 
+    console.error('Error creating organization:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET() {
+  try {
+    const supabase = await createClient();
+    
+    // Get current user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Get user's organizations
+    const { data: memberships, error: membershipError } = await supabase
+      .from('org_members')
+      .select(`
+        org_id,
+        role,
+        orgs (
+          id,
+          name,
+          created_at,
+          updated_at
+        )
+      `)
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true });
+
+    if (membershipError) {
+      console.error('Error fetching organizations:', membershipError);
+      return NextResponse.json({ error: 'Failed to fetch organizations' }, { status: 500 });
+    }
+
+    const organizations = memberships?.map(membership => ({
+      id: membership.orgs.id,
+      name: membership.orgs.name,
+      role: membership.role,
+      createdAt: membership.orgs.created_at,
+      updatedAt: membership.orgs.updated_at,
+    })) || [];
+
+    return NextResponse.json({
+      success: true,
+      organizations,
+    });
+
+  } catch (error) {
+    console.error('Error in organization API:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

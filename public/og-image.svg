@@ -1,0 +1,37 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect x="50" y="50" width="1100" height="530" rx="20" fill="#1e293b"/>
+  
+  <!-- Brain Icon -->
+  <g transform="translate(100, 150)">
+    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9M7.5 8C7.78 8 8 7.78 8 7.5C8 7.22 7.78 7 7.5 7C7.22 7 7 7.22 7 7.5C7 7.78 7.22 8 7.5 8ZM18.5 9C18.78 9 19 8.78 19 8.5C19 8.22 18.78 8 18.5 8C18.22 8 18 8.22 18 8.5C18 8.78 18.22 9 18.5 9Z" 
+          fill="#3b82f6" stroke="#3b82f6" stroke-width="2" transform="scale(3)"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="250" y="200" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="bold" fill="white">
+    ChiPhi AI
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="250" y="280" font-family="system-ui, -apple-system, sans-serif" font-size="36" fill="#94a3b8">
+    Turn inbox receipts into clear, trustworthy spend data
+  </text>
+  
+  <!-- Features -->
+  <text x="250" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#64748b">
+    • Multilingual AI processing
+  </text>
+  <text x="250" y="390" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#64748b">
+    • Explainable categorization
+  </text>
+  <text x="250" y="430" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#64748b">
+    • CSV/YNAB export
+  </text>
+  <text x="250" y="470" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#64748b">
+    • Enterprise security
+  </text>
+  
+  <!-- Accent -->
+  <rect x="50" y="580" width="1100" height="4" fill="#3b82f6"/>
+</svg>

@@ -10,7 +10,7 @@ BEGIN
   random_suffix := lower(substring(gen_random_uuid()::text from 1 for 8));
   
   -- Create alias in format: receipts-{random}@yourdomain.com
-  full_alias := 'receipts-' || random_suffix || '@chiphi.ai';
+  full_alias := 'receipts-' || random_suffix || '@kiro.oronculzac.com';
   
   -- Insert the alias
   INSERT INTO inbox_aliases (org_id, alias_email)
@@ -131,3 +131,17 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+--
+ Function to check if RLS is enabled on a table
+CREATE OR REPLACE FUNCTION check_rls_enabled(table_name TEXT)
+RETURNS BOOLEAN AS $
+DECLARE
+  rls_enabled BOOLEAN;
+BEGIN
+  SELECT relrowsecurity INTO rls_enabled
+  FROM pg_class
+  WHERE relname = table_name;
+  
+  RETURN COALESCE(rls_enabled, FALSE);
+END;
+$ LANGUAGE plpgsql SECURITY DEFINER;

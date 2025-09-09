@@ -7,6 +7,7 @@ vi.mock('@/lib/config', () => ({
   config: {
     inboundProvider: {
       sesSecret: 'test-ses-secret',
+      sharedSecret: 'test-shared-secret',
     },
     app: {
       isDevelopment: false,
@@ -32,17 +33,34 @@ describe('SESAdapter', () => {
   });
 
   describe('constructor', () => {
-    it('should create adapter with provided secret', () => {
-      const customAdapter = new SESAdapter('custom-secret');
+    it('should create adapter with provided secrets', () => {
+      const customAdapter = new SESAdapter('custom-webhook-secret', 30000, true, 'custom-shared-secret');
       expect(customAdapter.getName()).toBe('ses');
     });
 
-    it('should throw error in production without secret when verification enabled', () => {
-      expect(() => new SESAdapter(undefined, 30000, true)).toThrow(ProviderConfigurationError);
+    it('should throw error in production without any secret when verification enabled', () => {
+      // Mock production environment without any secrets
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = '';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = '';
+      vi.mocked(require('@/lib/config')).config.app.isProduction = true;
+      
+      expect(() => new SESAdapter(undefined, 30000, true, undefined)).toThrow(ProviderConfigurationError);
+      
+      // Reset mocks
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = 'test-ses-secret';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = 'test-shared-secret';
+    });
+
+    it('should not throw error in production with webhook secret only', () => {
+      expect(() => new SESAdapter('webhook-secret', 30000, true, undefined)).not.toThrow();
+    });
+
+    it('should not throw error in production with shared secret only', () => {
+      expect(() => new SESAdapter(undefined, 30000, true, 'shared-secret')).not.toThrow();
     });
 
     it('should not throw error in production without secret when verification disabled', () => {
-      expect(() => new SESAdapter(undefined, 30000, false)).not.toThrow();
+      expect(() => new SESAdapter(undefined, 30000, false, undefined)).not.toThrow();
     });
   });
 
@@ -72,23 +90,40 @@ describe('SESAdapter', () => {
       SigningCertURL: 'https://sns.us-east-1.amazonaws.com/test-cert.pem',
     });
 
-    const createTestRequest = (payload: any) => {
-      return new Request('https://example.com/webhook', {
+    const createTestRequest = (payload: any, url = 'https://example.com/webhook') => {
+      return new Request(url, {
         method: 'POST',
         body: JSON.stringify(payload),
       });
     };
 
-    it('should skip verification in development without secret', async () => {
-      const adapterWithoutSecret = new SESAdapter('', 30000, true);
-      // Mock development environment
-      vi.mocked(require('@/lib/config')).config.app.isDevelopment = true;
+    const createLambdaRequest = (payload: any, sharedSecret?: string) => {
+      const headers: Record<string, string> = {};
+      if (sharedSecret) {
+        headers['x-shared-secret'] = sharedSecret;
+      }
       
+      return new Request('https://example.com/api/inbound/lambda', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+    };
+
+    it('should skip verification in development without secret', async () => {
+      // Mock development environment
+      const mockConfig = vi.mocked(require('@/lib/config'));
+      mockConfig.config.app.isDevelopment = true;
+      
+      const adapterWithoutSecret = new SESAdapter('', 30000, true);
       const payload = createValidSNSMessage();
       const req = createTestRequest(payload);
 
       const result = await adapterWithoutSecret.verify(req);
       expect(result).toBe(true);
+      
+      // Reset to production
+      mockConfig.config.app.isDevelopment = false;
     });
 
     it('should skip verification when disabled', async () => {
@@ -119,9 +154,98 @@ describe('SESAdapter', () => {
 
     // Note: Full SNS signature verification testing would require mocking the certificate download
     // and crypto operations, which is complex. In a real implementation, you'd want more comprehensive tests.
+
+    describe('dual-path verification', () => {
+      it('should use shared secret verification for Lambda endpoint', async () => {
+        const sharedSecret = 'test-shared-secret';
+        const dualAdapter = new SESAdapter(testSecret, 30000, true, sharedSecret);
+        
+        const payload = { test: 'lambda-payload' };
+        const req = createLambdaRequest(payload, sharedSecret);
+
+        const result = await dualAdapter.verify(req);
+        expect(result).toBe(true);
+      });
+
+      it('should reject Lambda endpoint without shared secret header', async () => {
+        const sharedSecret = 'test-shared-secret';
+        const dualAdapter = new SESAdapter(testSecret, 30000, true, sharedSecret);
+        
+        const payload = { test: 'lambda-payload' };
+        const req = createLambdaRequest(payload); // No shared secret header
+
+        await expect(dualAdapter.verify(req)).rejects.toThrow(ProviderVerificationError);
+      });
+
+      it('should reject Lambda endpoint with wrong shared secret', async () => {
+        const sharedSecret = 'test-shared-secret';
+        const dualAdapter = new SESAdapter(testSecret, 30000, true, sharedSecret);
+        
+        const payload = { test: 'lambda-payload' };
+        const req = createLambdaRequest(payload, 'wrong-secret');
+
+        await expect(dualAdapter.verify(req)).rejects.toThrow(ProviderVerificationError);
+      });
+
+      it('should use SNS verification for direct webhook endpoint', async () => {
+        const sharedSecret = 'test-shared-secret';
+        const dualAdapter = new SESAdapter(testSecret, 30000, false, sharedSecret); // Disable verification for test
+        
+        const payload = createValidSNSMessage();
+        const req = createTestRequest(payload, 'https://example.com/api/inbound');
+
+        const result = await dualAdapter.verify(req);
+        expect(result).toBe(true);
+      });
+
+      it('should skip shared secret verification in development', async () => {
+        // Mock development environment
+        const mockConfig = vi.mocked(require('@/lib/config'));
+        mockConfig.config.app.isDevelopment = true;
+        
+        const dualAdapter = new SESAdapter(testSecret, 30000, true, ''); // No shared secret
+        const payload = { test: 'lambda-payload' };
+        const req = createLambdaRequest(payload); // No shared secret header
+
+        const result = await dualAdapter.verify(req);
+        expect(result).toBe(true);
+        
+        // Reset to production
+        mockConfig.config.app.isDevelopment = false;
+      });
+
+      it('should fail Lambda endpoint without shared secret in production', async () => {
+        const dualAdapter = new SESAdapter(testSecret, 30000, true, ''); // No shared secret
+        
+        const payload = { test: 'lambda-payload' };
+        const req = createLambdaRequest(payload);
+
+        await expect(dualAdapter.verify(req)).rejects.toThrow(ProviderVerificationError);
+      });
+    });
   });
 
   describe('parse', () => {
+    const createValidLambdaPayload = () => ({
+      alias: 'u_testorg@chiphi.oronculzac.com',
+      messageId: 'lambda-message-id-123',
+      from: 'sender@example.com',
+      to: 'u_testorg@chiphi.oronculzac.com',
+      subject: 'Test Receipt Email',
+      text: 'This is a test receipt email content.',
+      html: '<p>This is a test receipt email content.</p>',
+      rawRef: 'chiphi-raw-emails/inbound/email-123.eml',
+      receivedAt: '2024-01-01T12:00:00.000Z',
+      attachments: [
+        {
+          name: 'receipt.pdf',
+          contentType: 'application/pdf',
+          size: 1024,
+          key: 'emails/receipt-123.pdf',
+        },
+      ],
+    });
+
     const createValidSESPayload = () => ({
       Type: 'Notification',
       MessageId: 'sns-message-id-123',
@@ -165,12 +289,85 @@ describe('SESAdapter', () => {
       SigningCertURL: 'https://sns.us-east-1.amazonaws.com/test-cert.pem',
     });
 
-    const createTestRequest = (payload: any) => {
-      return new Request('https://example.com/webhook', {
+    const createTestRequest = (payload: any, url = 'https://example.com/webhook') => {
+      return new Request(url, {
         method: 'POST',
         body: JSON.stringify(payload),
       });
     };
+
+    describe('dual-path parsing', () => {
+      it('should parse Lambda payload for Lambda endpoint', async () => {
+        const payload = createValidLambdaPayload();
+        const req = new Request('https://example.com/api/inbound/lambda', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+
+        const result = await adapter.parse(req);
+
+        expect(result).toMatchObject({
+          alias: 'u_testorg@chiphi.oronculzac.com',
+          messageId: 'lambda-message-id-123',
+          from: 'sender@example.com',
+          to: 'u_testorg@chiphi.oronculzac.com',
+          subject: 'Test Receipt Email',
+          text: expect.stringContaining('test receipt email'),
+          html: expect.stringContaining('test receipt email'),
+          rawRef: 'chiphi-raw-emails/inbound/email-123.eml',
+          attachments: expect.arrayContaining([
+            expect.objectContaining({
+              name: 'receipt.pdf',
+              contentType: 'application/pdf',
+              size: 1024,
+            }),
+          ]),
+          metadata: expect.objectContaining({
+            provider: 'ses',
+            source: 'lambda',
+            correlationId: expect.stringMatching(/^email_\d+_[a-z0-9]+$/),
+          }),
+        });
+      });
+
+      it('should reject invalid Lambda payload', async () => {
+        const invalidPayload = { invalid: 'lambda-payload' };
+        const req = new Request('https://example.com/api/inbound/lambda', {
+          method: 'POST',
+          body: JSON.stringify(invalidPayload),
+        });
+
+        await expect(adapter.parse(req)).rejects.toThrow(ProviderParsingError);
+      });
+
+      it('should handle Lambda payload without optional fields', async () => {
+        const minimalPayload = {
+          alias: 'u_testorg@chiphi.oronculzac.com',
+          messageId: 'minimal-message-id',
+          from: 'sender@example.com',
+          to: 'u_testorg@chiphi.oronculzac.com',
+          text: 'Minimal email content',
+        };
+        const req = new Request('https://example.com/api/inbound/lambda', {
+          method: 'POST',
+          body: JSON.stringify(minimalPayload),
+        });
+
+        const result = await adapter.parse(req);
+
+        expect(result).toMatchObject({
+          alias: 'u_testorg@chiphi.oronculzac.com',
+          messageId: 'minimal-message-id',
+          from: 'sender@example.com',
+          to: 'u_testorg@chiphi.oronculzac.com',
+          text: 'Minimal email content',
+          subject: undefined,
+          html: undefined,
+          attachments: undefined,
+          rawRef: undefined,
+        });
+      });
+    });
 
     it('should parse valid SES SNS payload', async () => {
       const payload = createValidSESPayload();
@@ -321,29 +518,82 @@ describe('SESAdapter', () => {
       expect(result.healthy).toBe(true);
       expect(result.responseTimeMs).toBeGreaterThan(0);
       expect(result.details).toMatchObject({
-        hasSecret: true,
+        hasWebhookSecret: true,
+        hasSharedSecret: false, // Not provided in default adapter
         hasValidTimeout: true,
         signatureVerificationEnabled: true,
         timeoutMs: 30000,
+        supportsDualPath: true,
       });
     });
 
+    it('should return healthy status with both secrets', async () => {
+      const dualAdapter = new SESAdapter('webhook-secret', 30000, true, 'shared-secret');
+      const result = await dualAdapter.healthCheck();
+
+      expect(result.healthy).toBe(true);
+      expect(result.details).toMatchObject({
+        hasWebhookSecret: true,
+        hasSharedSecret: true,
+        hasValidTimeout: true,
+        signatureVerificationEnabled: true,
+        supportsDualPath: true,
+      });
+    });
+
+    it('should return healthy status with shared secret only', async () => {
+      // Mock config to not provide default secrets
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = '';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = '';
+      
+      const sharedOnlyAdapter = new SESAdapter('', 30000, true, 'shared-secret');
+      const result = await sharedOnlyAdapter.healthCheck();
+
+      expect(result.healthy).toBe(true);
+      expect(result.details?.hasWebhookSecret).toBe(false);
+      expect(result.details?.hasSharedSecret).toBe(true);
+      
+      // Reset mocks
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = 'test-ses-secret';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = 'test-shared-secret';
+    });
+
     it('should return healthy status without secret when verification disabled', async () => {
-      const adapterWithoutVerification = new SESAdapter('', 30000, false);
+      // Mock config to not provide default secrets
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = '';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = '';
+      
+      const adapterWithoutVerification = new SESAdapter('', 30000, false, '');
       const result = await adapterWithoutVerification.healthCheck();
 
       expect(result.healthy).toBe(true);
-      expect(result.details?.hasSecret).toBe(false);
+      expect(result.details?.hasWebhookSecret).toBe(false);
+      expect(result.details?.hasSharedSecret).toBe(false);
       expect(result.details?.signatureVerificationEnabled).toBe(false);
+      
+      // Reset mocks
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = 'test-ses-secret';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = 'test-shared-secret';
     });
 
-    it('should return unhealthy status without secret in production with verification enabled', async () => {
-      const adapterWithoutSecret = new SESAdapter('', 30000, true);
-      const result = await adapterWithoutSecret.healthCheck();
+    it('should return unhealthy status without any secret in production with verification enabled', async () => {
+      // Mock config to not provide default secrets and set production
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = '';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = '';
+      vi.mocked(require('@/lib/config')).config.app.isDevelopment = false;
+      
+      const adapterWithoutSecrets = new SESAdapter('', 30000, true, '');
+      const result = await adapterWithoutSecrets.healthCheck();
 
       expect(result.healthy).toBe(false);
-      expect(result.details?.hasSecret).toBe(false);
+      expect(result.details?.hasWebhookSecret).toBe(false);
+      expect(result.details?.hasSharedSecret).toBe(false);
       expect(result.details?.signatureVerificationEnabled).toBe(true);
+      
+      // Reset mocks
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sesSecret = 'test-ses-secret';
+      vi.mocked(require('@/lib/config')).config.inboundProvider.sharedSecret = 'test-shared-secret';
+      vi.mocked(require('@/lib/config')).config.app.isDevelopment = false;
     });
   });
 

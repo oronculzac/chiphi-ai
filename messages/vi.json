@@ -1,0 +1,270 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "retry": "Thử lại",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước đó",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "export": "Xuất",
+    "import": "Nhập",
+    "refresh": "Làm mới",
+    "settings": "Cài đặt",
+    "help": "Trợ giúp",
+    "logout": "Đăng xuất",
+    "login": "Đăng nhập",
+    "signup": "Đăng ký",
+    "dashboard": "Bảng điều khiển",
+    "reports": "Báo cáo",
+    "transactions": "Giao dịch",
+    "categories": "Danh mục",
+    "profile": "Hồ sơ"
+  },
+  "navigation": {
+    "home": "Trang chủ",
+    "dashboard": "Bảng điều khiển",
+    "reports": "Báo cáo",
+    "transactions": "Giao dịch",
+    "settings": "Cài đặt"
+  },
+  "reports": {
+    "title": "Báo cáo",
+    "monthToDate": "Từ đầu tháng đến nay",
+    "totalSpent": "Tổng chi tiêu",
+    "categoryBreakdown": "Phân tích theo danh mục",
+    "dailySpending": "Chi tiêu hàng ngày",
+    "noData": "Không có dữ liệu",
+    "exportCsv": "Xuất CSV",
+    "exportYnab": "Xuất YNAB",
+    "dateRange": "Khoảng thời gian",
+    "from": "Từ",
+    "to": "Đến",
+    "category": "Danh mục",
+    "allCategories": "Tất cả danh mục",
+    "searchTransactions": "Tìm kiếm giao dịch..."
+  },
+  "transactions": {
+    "title": "Giao dịch",
+    "date": "Ngày",
+    "amount": "Số tiền",
+    "merchant": "Cửa hàng",
+    "category": "Danh mục",
+    "subcategory": "Danh mục con",
+    "notes": "Ghi chú",
+    "confidence": "Độ tin cậy",
+    "noTransactions": "Không tìm thấy giao dịch",
+    "addTransaction": "Thêm giao dịch",
+    "editTransaction": "Chỉnh sửa giao dịch",
+    "deleteTransaction": "Xóa giao dịch"
+  },
+  "auth": {
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "signOut": "Đăng xuất",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "forgotPassword": "Quên mật khẩu?",
+    "resetPassword": "Đặt lại mật khẩu",
+    "createAccount": "Tạo tài khoản",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "dontHaveAccount": "Chưa có tài khoản?"
+  },
+  "errors": {
+    "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "network": "Lỗi mạng. Vui lòng kiểm tra kết nối của bạn.",
+    "unauthorized": "Bạn không có quyền thực hiện hành động này.",
+    "notFound": "Không tìm thấy tài nguyên được yêu cầu.",
+    "validation": "Vui lòng kiểm tra thông tin nhập và thử lại.",
+    "server": "Lỗi máy chủ. Vui lòng thử lại sau."
+  },
+  "settings": {
+    "common": {
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "loading": "Đang tải...",
+      "retry": "Thử lại",
+      "error": "Lỗi",
+      "success": "Thành công",
+      "confirm": "Xác nhận",
+      "close": "Đóng",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép",
+      "required": "Bắt buộc",
+      "optional": "Tùy chọn",
+      "enabled": "Đã bật",
+      "disabled": "Đã tắt"
+    },
+    "tabs": {
+      "organization": "Tổ chức",
+      "inboundEmail": "Email nhận",
+      "notifications": "Thông báo",
+      "data": "Dữ liệu",
+      "integrations": "Tích hợp"
+    },
+    "organization": {
+      "title": "Cài đặt tổ chức",
+      "description": "Quản lý thông tin tổ chức và thành viên nhóm.",
+      "name": {
+        "label": "Tên tổ chức",
+        "placeholder": "Nhập tên tổ chức",
+        "required": "Tên tổ chức là bắt buộc",
+        "maxLength": "Tên tổ chức phải ít hơn 100 ký tự",
+        "saving": "Đang lưu...",
+        "saved": "Đã lưu tên tổ chức"
+      },
+      "logo": {
+        "title": "Logo tổ chức",
+        "description": "Tải lên logo cho tổ chức của bạn. Định dạng hỗ trợ: JPEG, PNG, WebP. Kích thước tối đa: 5MB.",
+        "upload": "Tải lên Logo",
+        "remove": "Xóa Logo",
+        "uploading": "Đang tải lên...",
+        "uploaded": "Đã tải lên logo thành công",
+        "removed": "Đã xóa logo thành công",
+        "error": "Không thể tải lên logo",
+        "invalidType": "Định dạng file không hợp lệ. Vui lòng tải lên JPEG, PNG, hoặc WebP.",
+        "tooLarge": "File quá lớn. Kích thước tối đa là {maxSize}."
+      },
+      "members": {
+        "title": "Thành viên nhóm",
+        "description": "Mời và quản lý thành viên nhóm cùng vai trò của họ.",
+        "invite": "Mời thành viên",
+        "email": "Email",
+        "role": "Vai trò",
+        "joinedAt": "Tham gia",
+        "actions": "Hành động",
+        "roles": {
+          "owner": "Chủ sở hữu",
+          "admin": "Quản trị viên",
+          "member": "Thành viên"
+        }
+      }
+    },
+    "inboundEmail": {
+      "title": "Cấu hình Email nhận",
+      "description": "Cấu hình địa chỉ email duy nhất để xử lý hóa đơn.",
+      "alias": {
+        "title": "Email hóa đơn của bạn",
+        "description": "Chuyển tiếp hóa đơn đến địa chỉ email này để xử lý tự động.",
+        "copy": "Sao chép Email",
+        "copied": "Đã sao chép email vào clipboard"
+      },
+      "verification": {
+        "title": "Xác minh Email",
+        "description": "Xác minh cấu hình email của bạn hoạt động chính xác.",
+        "status": "Trạng thái",
+        "lastReceived": "Email cuối cùng nhận được",
+        "noEmails": "Chưa nhận được email nào",
+        "getCode": "Gửi Email thử nghiệm",
+        "gettingCode": "Đang gửi...",
+        "verified": "Đã xác minh",
+        "pending": "Đang chờ",
+        "codeReceived": "Mã xác minh: {code}",
+        "codeExpires": "Mã hết hạn trong {time}"
+      }
+    },
+    "notifications": {
+      "title": "Tùy chọn thông báo",
+      "description": "Cấu hình khi nào và cách bạn nhận thông báo.",
+      "types": {
+        "receiptProcessed": {
+          "label": "Hóa đơn đã xử lý",
+          "description": "Nhận thông báo khi hóa đơn được xử lý thành công"
+        },
+        "dailySummary": {
+          "label": "Tóm tắt hàng ngày",
+          "description": "Nhận tóm tắt hàng ngày về các giao dịch của bạn"
+        },
+        "weeklySummary": {
+          "label": "Tóm tắt hàng tuần",
+          "description": "Nhận tóm tắt hàng tuần về chi tiêu của bạn"
+        }
+      },
+      "emails": {
+        "title": "Email thông báo",
+        "description": "Thêm địa chỉ email để nhận thông báo.",
+        "add": "Thêm Email",
+        "placeholder": "Nhập địa chỉ email",
+        "adding": "Đang thêm...",
+        "added": "Đã thêm email thành công",
+        "remove": "Xóa",
+        "removing": "Đang xóa...",
+        "removed": "Đã xóa email thành công",
+        "invalid": "Vui lòng nhập địa chỉ email hợp lệ",
+        "duplicate": "Email này đã được thêm"
+      },
+      "saving": "Đang lưu tùy chọn...",
+      "saved": "Đã lưu tùy chọn thành công",
+      "error": "Không thể lưu tùy chọn"
+    },
+    "data": {
+      "title": "Quản lý dữ liệu",
+      "description": "Xuất dữ liệu và quản lý tài khoản của bạn.",
+      "export": {
+        "title": "Xuất dữ liệu",
+        "description": "Tải xuống dữ liệu giao dịch của bạn ở nhiều định dạng khác nhau.",
+        "dateRange": {
+          "label": "Khoảng thời gian",
+          "start": "Ngày bắt đầu",
+          "end": "Ngày kết thúc",
+          "invalid": "Vui lòng chọn khoảng thời gian hợp lệ"
+        },
+        "format": {
+          "label": "Định dạng xuất",
+          "csv": "CSV (Comma Separated Values)",
+          "ynab": "YNAB (You Need A Budget)"
+        },
+        "buttons": {
+          "csv": "Xuất dưới dạng CSV",
+          "ynab": "Xuất cho YNAB",
+          "exporting": "Đang xuất...",
+          "exported": "Xuất hoàn tất thành công"
+        }
+      },
+      "dangerZone": {
+        "title": "Vùng nguy hiểm",
+        "description": "Các hành động không thể hoàn tác sẽ xóa vĩnh viễn dữ liệu của bạn.",
+        "deleteAccount": {
+          "title": "Xóa tổ chức",
+          "description": "Xóa vĩnh viễn tổ chức và tất cả dữ liệu liên quan.",
+          "button": "Xóa tổ chức",
+          "dialog": {
+            "title": "Xóa tổ chức",
+            "description": "Hành động này không thể hoàn tác. Tất cả dữ liệu sẽ bị xóa vĩnh viễn.",
+            "warning": "Vui lòng nhập \"{organizationName}\" để xác nhận xóa.",
+            "placeholder": "Nhập tên tổ chức ở đây",
+            "mismatch": "Tên tổ chức không khớp",
+            "confirm": "Xóa vĩnh viễn",
+            "cancel": "Hủy",
+            "deleting": "Đang xóa...",
+            "deleted": "Đã xóa tổ chức thành công"
+          }
+        }
+      }
+    },
+    "integrations": {
+      "title": "Tích hợp",
+      "description": "Kết nối ChiPhi AI với các công cụ và dịch vụ yêu thích của bạn.",
+      "comingSoon": "Sắp ra mắt",
+      "googleSheets": {
+        "title": "Google Sheets",
+        "description": "Tự động đồng bộ giao dịch của bạn với Google Sheets",
+        "tooltip": "Tích hợp Google Sheets sẽ sớm có sẵn"
+      },
+      "notion": {
+        "title": "Notion",
+        "description": "Tạo và cập nhật cơ sở dữ liệu Notion với dữ liệu giao dịch của bạn",
+        "tooltip": "Tích hợp Notion sẽ sớm có sẵn"
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ import {
 } from './types';
 import { CloudflareAdapter } from './providers/cloudflare-adapter';
 import { SESAdapter } from './providers/ses-adapter';
+import { GmailAdapter } from './providers/gmail-adapter';
 import { config } from '@/lib/config';
 
 /**
@@ -14,7 +15,9 @@ import { config } from '@/lib/config';
  * Handles provider selection, configuration validation, and health checking
  */
 export class ProviderFactory {
-  private static readonly SUPPORTED_PROVIDERS = ['cloudflare', 'ses'] as const;
+  private static readonly SUPPORTED_PROVIDERS = config.app.isProduction 
+    ? ['ses', 'gmail'] as const 
+    : ['cloudflare', 'ses', 'gmail'] as const;
   private static providerInstances = new Map<string, InboundEmailProvider>();
   private static healthCheckCache = new Map<string, ProviderHealthCheck>();
   private static readonly HEALTH_CHECK_TTL_MS = 60000; // 1 minute
@@ -40,6 +43,14 @@ export class ProviderFactory {
       });
     }
 
+    // In production builds, only allow SES provider
+    if (config.app.isProduction && providerName === 'cloudflare') {
+      throw new ProviderConfigurationError(providerName, {
+        message: 'Cloudflare provider is not available in production builds',
+        supportedProviders: ['ses'],
+      });
+    }
+
     const cacheKey = this.getCacheKey(providerName, options);
     
     // Return cached instance if available
@@ -52,6 +63,12 @@ export class ProviderFactory {
     try {
       switch (providerName) {
         case 'cloudflare':
+          // Only create Cloudflare adapter in non-production environments
+          if (config.app.isProduction) {
+            throw new ProviderConfigurationError(providerName, {
+              message: 'Cloudflare provider is disabled in production',
+            });
+          }
           provider = new CloudflareAdapter(
             options?.webhookSecret || config.inboundProvider.cloudflareSecret,
             options?.timeoutMs || 30000
@@ -62,8 +79,18 @@ export class ProviderFactory {
           provider = new SESAdapter(
             options?.webhookSecret || config.inboundProvider.sesSecret,
             options?.timeoutMs || 30000,
-            options?.verifySignature ?? true
+            options?.verifySignature ?? true,
+            options?.webhookSecret || config.inboundProvider.sharedSecret
           );
+          break;
+
+        case 'gmail':
+          provider = new GmailAdapter({
+            clientEmail: process.env.GOOGLE_CLIENT_EMAIL,
+            privateKey: process.env.GOOGLE_PRIVATE_KEY,
+            projectId: process.env.GOOGLE_PROJECT_ID,
+            topicName: process.env.GOOGLE_PUBSUB_TOPIC,
+          });
           break;
 
         default:

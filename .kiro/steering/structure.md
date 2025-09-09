@@ -4,14 +4,24 @@
 
 ```
 ├── app/                    # Next.js App Router pages and API routes
+│   ├── (app)/            # Authenticated app routes
+│   │   ├── dashboard/    # Dashboard pages
+│   │   ├── reports/      # Reports MVP pages
+│   │   └── ...           # Other authenticated pages
 │   ├── api/               # API route handlers
+│   │   ├── reports/      # Reports API endpoints
+│   │   └── ...           # Other API routes
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout component
 │   ├── loading.tsx        # Global loading UI
 │   └── page.tsx           # Home page
 ├── components/            # Reusable React components
 │   ├── ui/               # shadcn/ui components
-│   └── *.tsx             # Custom components
+│   ├── reports/          # Reports-specific components
+│   │   ├── widgets/      # Report widget components
+│   │   ├── filters/      # Filter components
+│   │   └── charts/       # Chart components
+│   └── *.tsx             # Other custom components
 ├── hooks/                 # Custom React hooks
 ├── lib/                   # Core business logic and utilities
 │   ├── database/         # Database utilities and helpers

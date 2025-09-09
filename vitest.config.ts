@@ -35,6 +35,8 @@ export default defineConfig({
       'components/**/*.{test,spec}.{js,ts,tsx}',
       'hooks/**/*.{test,spec}.{js,ts}',
       'app/**/*.{test,spec}.{js,ts}',
+      'tests/unit/**/*.{test,spec}.{js,ts,tsx}',
+      'tests/integration/**/*.{test,spec}.{js,ts}',
     ],
     exclude: [
       'node_modules/',
@@ -42,6 +44,7 @@ export default defineConfig({
       'tests/mcp/',
       'tests/fixtures/',
       'tests/utils/',
+      'tests/visual/',
       '.next/',
       'dist/',
     ],

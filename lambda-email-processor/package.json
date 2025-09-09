@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.mjs",
   "scripts": {
-    "build": "esbuild index.mjs --bundle --platform=node --target=node20 --outfile=dist/index.mjs --external:@aws-sdk/*",
-    "package": "npm run build && cd dist && zip -r ../lambda-deployment.zip ."
+    "build": "esbuild index.mjs --bundle --platform=node --target=node20 --outfile=dist/index.mjs --external:@aws-sdk/* --external:mailparser --format=esm",
+    "package": "npm run build && npm install --production && cp -r node_modules dist/ && cd dist && zip -r ../lambda-deployment.zip ."
   },
   "dependencies": {
     "mailparser": "^3.6.5"

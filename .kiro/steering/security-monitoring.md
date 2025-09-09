@@ -22,6 +22,12 @@ CREATE POLICY "Users can only access their org's data"
   );
 ```
 
+### Reports-Specific Security Patterns
+- **Database Function Security**: All fn_report_* functions must use SECURITY DEFINER with RLS enforcement
+- **Export Rate Limiting**: Implement per-organization limits on CSV/YNAB exports
+- **Filter Validation**: Validate all filter parameters to prevent SQL injection in search queries
+- **Data Aggregation Security**: Ensure aggregated data doesn't leak cross-tenant information
+
 ### Email Processing Security
 - HMAC signature verification for all inbound emails
 - PAN redaction for credit card numbers

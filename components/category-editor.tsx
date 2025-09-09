@@ -213,13 +213,13 @@ export function CategoryEditor({ transaction, onSave, onCancel }: CategoryEditor
               <div className="space-y-2">
                 {availableSubcategories.length > 0 && (
                   <Select
-                    value={useCustomSubcategory ? 'custom' : subcategory}
+                    value={useCustomSubcategory ? 'custom' : (subcategory || 'none')}
                     onValueChange={(value) => {
                       if (value === 'custom') {
                         setUseCustomSubcategory(true);
                       } else {
                         setUseCustomSubcategory(false);
-                        setSubcategory(value);
+                        setSubcategory(value === 'none' ? '' : value);
                       }
                     }}
                     disabled={saving}
@@ -228,7 +228,7 @@ export function CategoryEditor({ transaction, onSave, onCancel }: CategoryEditor
                       <SelectValue placeholder="Select a subcategory" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No subcategory</SelectItem>
+                      <SelectItem value="none">No subcategory</SelectItem>
                       {availableSubcategories.map((subcat) => (
                         <SelectItem key={subcat} value={subcat}>
                           {subcat}

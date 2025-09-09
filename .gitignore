@@ -25,3 +25,37 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test results
+/test-results/
+/tests/visual/screenshots/
+/tests/visual/test-results/
+
+# development files
+/docs/
+/scripts/test-*
+/scripts/ses-smoke-*
+/scripts/validate-*
+nul
+
+# abandoned flows
+gmail-*.md
+gmail-*.js
+n8n-*.md
+n8n-*.json
+setup-*.js
+setup-*.sh
+simple-*.js
+test-*.js
+cloudflare-worker.js
+docker-compose.*.yml
+Dockerfile.*
+vercel.json
+
+# documentation
+*.md
+!README.md
+
+# config files for abandoned providers
+.env.ses.example
+playwright-simple.config.ts

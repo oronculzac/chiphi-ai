@@ -12,6 +12,14 @@
 - Implement proper accessibility (ARIA labels, keyboard navigation)
 - Test components in isolation using Playwright MCP + shadcn MCP integration
 
+### Chart and Data Visualization Patterns
+- **Recharts Integration**: Use Recharts for all chart components (donut, line, area charts)
+- **Loading States**: Implement skeleton loaders for chart components during data fetching
+- **Empty States**: Provide meaningful empty states with actionable suggestions
+- **Interactive Elements**: Ensure chart interactions (click-to-filter) are keyboard accessible
+- **Responsive Design**: Charts must adapt to different screen sizes and orientations
+- **Color Accessibility**: Use colorblind-friendly palettes and don't rely solely on color
+
 ### MCP-First Component Development Workflow
 1. **Discovery**: Use shadcn MCP `search-components` to find suitable base components
 2. **Installation**: Use shadcn MCP `add-component` to install required components

@@ -33,7 +33,7 @@ export function TransactionDetailView({ transaction }: TransactionDetailViewProp
                         transaction.source_language && transaction.source_language !== 'en';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-4">
       {/* Transaction Summary */}
       <Card>
         <CardHeader>
@@ -48,9 +48,9 @@ export function TransactionDetailView({ transaction }: TransactionDetailViewProp
             />
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-3">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
                 <span className="font-medium">Date:</span>
@@ -72,7 +72,7 @@ export function TransactionDetailView({ transaction }: TransactionDetailViewProp
               )}
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Tag className="w-4 h-4 text-muted-foreground" />
                 <span className="font-medium">Category:</span>
@@ -120,9 +120,9 @@ export function TransactionDetailView({ transaction }: TransactionDetailViewProp
             />
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <div className="prose prose-sm max-w-none">
-            <p>{transaction.explanation}</p>
+            <p className="leading-relaxed">{transaction.explanation}</p>
           </div>
         </CardContent>
       </Card>
@@ -147,7 +147,7 @@ export function TransactionDetailView({ transaction }: TransactionDetailViewProp
             )}
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           {hasTranslation ? (
             <Tabs value={showOriginalText ? 'original' : 'translated'} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
@@ -166,26 +166,32 @@ export function TransactionDetailView({ transaction }: TransactionDetailViewProp
               </TabsList>
               
               <TabsContent value="translated" className="mt-4">
-                <ScrollArea className="h-64 w-full rounded-md border p-4">
-                  <pre className="whitespace-pre-wrap text-sm">
-                    {transaction.translated_text || 'No translated text available'}
-                  </pre>
+                <ScrollArea className="h-64 w-full rounded-md border">
+                  <div className="p-4">
+                    <pre className="whitespace-pre-wrap text-sm leading-relaxed">
+                      {transaction.translated_text || 'No translated text available'}
+                    </pre>
+                  </div>
                 </ScrollArea>
               </TabsContent>
               
               <TabsContent value="original" className="mt-4">
-                <ScrollArea className="h-64 w-full rounded-md border p-4">
-                  <pre className="whitespace-pre-wrap text-sm">
-                    {transaction.original_text || 'No original text available'}
-                  </pre>
+                <ScrollArea className="h-64 w-full rounded-md border">
+                  <div className="p-4">
+                    <pre className="whitespace-pre-wrap text-sm leading-relaxed">
+                      {transaction.original_text || 'No original text available'}
+                    </pre>
+                  </div>
                 </ScrollArea>
               </TabsContent>
             </Tabs>
           ) : (
-            <ScrollArea className="h-64 w-full rounded-md border p-4">
-              <pre className="whitespace-pre-wrap text-sm">
-                {transaction.original_text || transaction.translated_text || 'No receipt text available'}
-              </pre>
+            <ScrollArea className="h-64 w-full rounded-md border">
+              <div className="p-4">
+                <pre className="whitespace-pre-wrap text-sm leading-relaxed">
+                  {transaction.original_text || transaction.translated_text || 'No receipt text available'}
+                </pre>
+              </div>
             </ScrollArea>
           )}
         </CardContent>
@@ -196,8 +202,8 @@ export function TransactionDetailView({ transaction }: TransactionDetailViewProp
         <CardHeader>
           <CardTitle>Metadata</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
             <div>
               <span className="font-medium">Transaction ID:</span>
               <p className="text-muted-foreground font-mono">{transaction.id}</p>

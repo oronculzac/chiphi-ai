@@ -8,6 +8,7 @@ import {
   ProviderConfigurationError,
   SESPayloadSchema,
   SESMailSchema,
+  SESLambdaPayloadSchema,
   normalizeEmailContent,
   sanitizeMetadata,
   generateCorrelationId,
@@ -16,19 +17,22 @@ import { config } from '@/lib/config';
 
 /**
  * Amazon SES (Simple Email Service) adapter
- * Handles email processing from Amazon SES via SNS notifications
+ * Handles email processing from Amazon SES via SNS notifications and Lambda-processed payloads
  */
 export class SESAdapter implements InboundEmailProvider {
   private readonly webhookSecret: string;
+  private readonly sharedSecret: string;
   private readonly timeoutMs: number;
   private readonly verifySignature: boolean;
 
   constructor(
     webhookSecret?: string, 
     timeoutMs: number = 30000,
-    verifySignature: boolean = true
+    verifySignature: boolean = true,
+    sharedSecret?: string
   ) {
     this.webhookSecret = webhookSecret || config.inboundProvider.sesSecret || '';
+    this.sharedSecret = sharedSecret || config.inboundProvider.sharedSecret || '';
     this.timeoutMs = timeoutMs;
     this.verifySignature = verifySignature;
 
@@ -36,10 +40,12 @@ export class SESAdapter implements InboundEmailProvider {
     const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
                        process.env.NODE_ENV === undefined;
 
-    if (!isBuildTime && !this.webhookSecret && config.app.isProduction && this.verifySignature) {
-      throw new ProviderConfigurationError('ses', {
-        message: 'SES_WEBHOOK_SECRET is required in production when signature verification is enabled',
-      });
+    if (!isBuildTime && config.app.isProduction && this.verifySignature) {
+      if (!this.webhookSecret && !this.sharedSecret) {
+        throw new ProviderConfigurationError('ses', {
+          message: 'Either SES_WEBHOOK_SECRET or SHARED_SECRET is required in production when signature verification is enabled',
+        });
+      }
     }
   }
 
@@ -48,14 +54,106 @@ export class SESAdapter implements InboundEmailProvider {
   }
 
   /**
-   * Verify SNS signature from Amazon SES
-   * Uses AWS SNS signature verification algorithm
+   * Verify request authenticity using dual-path verification
+   * - For /api/inbound/lambda: verify shared secret header
+   * - For direct webhooks: verify SNS signature
    */
   async verify(req: Request): Promise<boolean> {
     try {
-      // In development, skip verification if disabled or no secret
-      if (!this.verifySignature || (!this.webhookSecret && config.app.isDevelopment)) {
+      // In development, skip verification if disabled
+      if (!this.verifySignature && config.app.isDevelopment) {
         return true;
+      }
+
+      const url = new URL(req.url);
+      const isLambdaPath = url.pathname.includes('/lambda');
+
+      if (isLambdaPath) {
+        // Lambda endpoint: verify shared secret
+        return await this.verifySharedSecret(req);
+      } else {
+        // Direct webhook: verify SNS signature
+        return await this.verifySNSSignature(req);
+      }
+    } catch (error) {
+      if (error instanceof ProviderVerificationError) {
+        throw error;
+      }
+      
+      throw new ProviderVerificationError('ses', {
+        message: 'Verification failed with unexpected error',
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * Verify shared secret for Lambda endpoint
+   */
+  private async verifySharedSecret(req: Request): Promise<boolean> {
+    try {
+      // In development, skip verification if no secret
+      if (!this.sharedSecret && config.app.isDevelopment) {
+        return true;
+      }
+
+      if (!this.sharedSecret) {
+        throw new ProviderVerificationError('ses', {
+          message: 'Shared secret not configured for Lambda endpoint verification',
+        });
+      }
+
+      const providedSecret = req.headers.get('x-shared-secret');
+      if (!providedSecret) {
+        throw new ProviderVerificationError('ses', {
+          message: 'Missing x-shared-secret header for Lambda endpoint',
+        });
+      }
+
+      // Use constant-time comparison to prevent timing attacks
+      const expectedBuffer = Buffer.from(this.sharedSecret, 'utf8');
+      const providedBuffer = Buffer.from(providedSecret, 'utf8');
+
+      if (expectedBuffer.length !== providedBuffer.length) {
+        throw new ProviderVerificationError('ses', {
+          message: 'Shared secret verification failed',
+        });
+      }
+
+      const isValid = crypto.timingSafeEqual(expectedBuffer, providedBuffer);
+      if (!isValid) {
+        throw new ProviderVerificationError('ses', {
+          message: 'Shared secret verification failed',
+        });
+      }
+
+      return true;
+    } catch (error) {
+      if (error instanceof ProviderVerificationError) {
+        throw error;
+      }
+      
+      throw new ProviderVerificationError('ses', {
+        message: 'Shared secret verification failed with unexpected error',
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * Verify SNS signature for direct webhook
+   */
+  private async verifySNSSignature(req: Request): Promise<boolean> {
+    try {
+      // In development, skip verification if no secret
+      if (!this.webhookSecret && config.app.isDevelopment) {
+        return true;
+      }
+
+      if (!this.webhookSecret) {
+        throw new ProviderVerificationError('ses', {
+          message: 'Webhook secret not configured for SNS signature verification',
+        });
       }
 
       // Clone request to read body without consuming it
@@ -82,7 +180,7 @@ export class SESAdapter implements InboundEmailProvider {
       }
 
       // Verify SNS signature
-      const isValid = await this.verifySNSSignature(snsMessage);
+      const isValid = await this.verifySNSSignatureInternal(snsMessage);
       if (!isValid) {
         throw new ProviderVerificationError('ses', {
           message: 'SNS signature verification failed',
@@ -98,19 +196,97 @@ export class SESAdapter implements InboundEmailProvider {
       }
       
       throw new ProviderVerificationError('ses', {
-        message: 'Verification failed with unexpected error',
+        message: 'SNS signature verification failed with unexpected error',
         error: error instanceof Error ? error.message : String(error),
       });
     }
   }
 
   /**
-   * Parse Amazon SES SNS notification payload
-   * Converts SES-specific format to normalized InboundEmailPayload
+   * Parse request payload using dual-path parsing
+   * - For /api/inbound/lambda: parse compact JSON format from Lambda
+   * - For direct webhooks: parse SNS notification format
    */
   async parse(req: Request): Promise<InboundEmailPayload> {
     try {
       const correlationId = generateCorrelationId();
+      const url = new URL(req.url);
+      const isLambdaPath = url.pathname.includes('/lambda');
+
+      if (isLambdaPath) {
+        // Lambda endpoint: parse compact JSON payload
+        return await this.parseLambdaPayload(req, correlationId);
+      } else {
+        // Direct webhook: parse SNS payload
+        return await this.parseSNSPayload(req, correlationId);
+      }
+    } catch (error) {
+      if (error instanceof ProviderParsingError) {
+        throw error;
+      }
+      
+      throw new ProviderParsingError('ses', {
+        message: 'Parsing failed with unexpected error',
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * Parse Lambda-processed compact JSON payload
+   */
+  private async parseLambdaPayload(req: Request, correlationId: string): Promise<InboundEmailPayload> {
+    try {
+      const body = await req.text();
+      
+      if (!body) {
+        throw new ProviderParsingError('ses', {
+          message: 'Empty request body',
+          correlationId,
+        });
+      }
+
+      let lambdaPayload: any;
+      try {
+        lambdaPayload = JSON.parse(body);
+      } catch (parseError) {
+        throw new ProviderParsingError('ses', {
+          message: 'Invalid JSON in Lambda payload',
+          correlationId,
+          parseError: parseError instanceof Error ? parseError.message : String(parseError),
+        });
+      }
+
+      // Validate Lambda payload structure
+      const validation = SESLambdaPayloadSchema.safeParse(lambdaPayload);
+      if (!validation.success) {
+        throw new ProviderParsingError('ses', {
+          message: 'Lambda payload validation failed',
+          correlationId,
+          validationErrors: validation.error.errors,
+        });
+      }
+
+      // Convert to normalized format
+      return await this.normalizeLambdaPayload(lambdaPayload, correlationId);
+    } catch (error) {
+      if (error instanceof ProviderParsingError) {
+        throw error;
+      }
+      
+      throw new ProviderParsingError('ses', {
+        message: 'Lambda payload parsing failed with unexpected error',
+        correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  /**
+   * Parse SNS notification payload (legacy direct webhook)
+   */
+  private async parseSNSPayload(req: Request, correlationId: string): Promise<InboundEmailPayload> {
+    try {
       const body = await req.text();
       
       if (!body) {
@@ -187,7 +363,8 @@ export class SESAdapter implements InboundEmailProvider {
       }
       
       throw new ProviderParsingError('ses', {
-        message: 'Parsing failed with unexpected error',
+        message: 'SNS payload parsing failed with unexpected error',
+        correlationId,
         error: error instanceof Error ? error.message : String(error),
       });
     }
@@ -196,7 +373,7 @@ export class SESAdapter implements InboundEmailProvider {
   /**
    * Verify SNS signature using AWS algorithm
    */
-  private async verifySNSSignature(snsMessage: any): Promise<boolean> {
+  private async verifySNSSignatureInternal(snsMessage: any): Promise<boolean> {
     try {
       const {
         Message,
@@ -301,6 +478,52 @@ export class SESAdapter implements InboundEmailProvider {
         reject(error);
       });
     });
+  }
+
+  /**
+   * Convert Lambda-processed payload to normalized format
+   */
+  private async normalizeLambdaPayload(
+    lambdaPayload: any,
+    correlationId: string
+  ): Promise<InboundEmailPayload> {
+    try {
+      // Lambda payload is already in a normalized format, just need to convert types
+      const receivedAt = lambdaPayload.receivedAt ? new Date(lambdaPayload.receivedAt) : new Date();
+
+      // Extract metadata
+      const metadata = sanitizeMetadata({
+        provider: 'ses',
+        correlationId,
+        source: 'lambda',
+        rawRef: lambdaPayload.rawRef,
+        originalPayload: {
+          hasText: !!lambdaPayload.text,
+          hasHtml: !!lambdaPayload.html,
+          attachmentCount: lambdaPayload.attachments?.length || 0,
+        },
+      });
+
+      return {
+        alias: lambdaPayload.alias,
+        messageId: lambdaPayload.messageId,
+        from: lambdaPayload.from,
+        to: lambdaPayload.to,
+        subject: lambdaPayload.subject || undefined,
+        text: lambdaPayload.text ? normalizeEmailContent(lambdaPayload.text) : undefined,
+        html: lambdaPayload.html ? normalizeEmailContent(lambdaPayload.html) : undefined,
+        attachments: lambdaPayload.attachments || undefined,
+        rawRef: lambdaPayload.rawRef || undefined,
+        receivedAt,
+        metadata,
+      };
+    } catch (error) {
+      throw new ProviderParsingError('ses', {
+        message: 'Failed to normalize Lambda payload',
+        correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 
   /**
@@ -446,22 +669,27 @@ export class SESAdapter implements InboundEmailProvider {
     
     try {
       // Basic configuration check
-      const hasSecret = !!this.webhookSecret;
+      const hasWebhookSecret = !!this.webhookSecret;
+      const hasSharedSecret = !!this.sharedSecret;
       const hasValidTimeout = this.timeoutMs > 0 && this.timeoutMs <= 60000;
       const signatureVerificationEnabled = this.verifySignature;
 
-      const healthy = hasSecret || config.app.isDevelopment || !signatureVerificationEnabled;
+      // Healthy if we have at least one secret or we're in development with verification disabled
+      const healthy = (hasWebhookSecret || hasSharedSecret) || 
+                     (config.app.isDevelopment && !signatureVerificationEnabled);
       const responseTimeMs = Date.now() - startTime;
 
       return {
         healthy,
         responseTimeMs,
         details: {
-          hasSecret,
+          hasWebhookSecret,
+          hasSharedSecret,
           hasValidTimeout,
           signatureVerificationEnabled,
           timeoutMs: this.timeoutMs,
           environment: config.app.nodeEnv,
+          supportsDualPath: true,
         },
       };
     } catch (error) {
@@ -481,11 +709,13 @@ export function createSESAdapter(options?: {
   webhookSecret?: string;
   timeoutMs?: number;
   verifySignature?: boolean;
+  sharedSecret?: string;
 }): SESAdapter {
   return new SESAdapter(
     options?.webhookSecret,
     options?.timeoutMs,
-    options?.verifySignature
+    options?.verifySignature,
+    options?.sharedSecret
   );
 }
 
@@ -494,6 +724,7 @@ export function createSESAdapter(options?: {
  */
 export const defaultSESAdapter = createSESAdapter({
   webhookSecret: config.inboundProvider.sesSecret,
+  sharedSecret: config.inboundProvider.sharedSecret,
   timeoutMs: 30000,
   verifySignature: true,
 });

@@ -24,6 +24,8 @@ export interface ProcessingStepLog {
   errorMessage?: string;
   processingTimeMs?: number;
   correlationId?: string;
+  rawRef?: string; // S3 reference for audit trail
+  messageId?: string; // Email message ID for correlation
 }
 
 export interface AIUsageLog {
@@ -71,7 +73,7 @@ export class LoggingService {
   }
 
   /**
-   * Log processing step with correlation tracking
+   * Log processing step with correlation tracking and audit trail
    */
   async logProcessingStep(log: ProcessingStepLog): Promise<void> {
     try {
@@ -83,6 +85,9 @@ export class LoggingService {
         step_details: log.details,
         error_msg: log.errorMessage,
         processing_time: log.processingTimeMs,
+        correlation_id_param: log.correlationId,
+        raw_ref_param: log.rawRef,
+        message_id_param: log.messageId,
       });
 
       if (error) {
@@ -96,6 +101,8 @@ export class LoggingService {
         emailId: log.emailId,
         processingTimeMs: log.processingTimeMs,
         correlationId: log.correlationId,
+        rawRef: log.rawRef,
+        messageId: log.messageId,
         details: log.details,
       });
 

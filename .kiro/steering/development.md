@@ -81,6 +81,13 @@ curl -f http://localhost:3003 2>/dev/null && echo "Server running on 3003"
 - Combine both MCPs for comprehensive UI/UX development cycles
 - Use Playwright MCP `browser_snapshot` over `browser_take_screenshot` for accessibility-focused testing
 
+### Reports MVP Testing Patterns
+- **Chart Component Testing**: Use Playwright MCP to test Recharts components with real data
+- **Filter Interaction Testing**: Test date pickers, category selectors, and search inputs
+- **Export Functionality Testing**: Verify CSV downloads with proper headers and data
+- **Empty State Testing**: Test scenarios with no data and proper messaging
+- **Performance Testing**: Monitor chart rendering times and data loading performance
+
 ### Test Data Management
 - Use synthetic email fixtures for consistent testing
 - Clean up test data after each test run

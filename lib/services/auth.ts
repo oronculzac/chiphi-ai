@@ -70,6 +70,29 @@ export class AuthService {
   }
 
   /**
+   * Sign up with email and password
+   */
+  async signUpWithPassword(email: string, password: string): Promise<{ error?: string }> {
+    try {
+      const { error } = await this.supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${config.app.nextAuthUrl}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
+      return { error: 'Failed to create account' };
+    }
+  }
+
+  /**
    * Sign out current user
    */
   async signOut(): Promise<{ error?: string }> {

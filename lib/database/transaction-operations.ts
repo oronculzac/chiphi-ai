@@ -20,12 +20,14 @@ import {
  * - 7.4: Secure data handling
  */
 export class TransactionDatabaseOperations {
-  private supabase;
   private adminSupabase;
 
   constructor() {
-    this.supabase = createClient();
     this.adminSupabase = createAdminClient();
+  }
+
+  private async getSupabaseClient() {
+    return await createClient();
   }
 
   /**
@@ -136,7 +138,8 @@ export class TransactionDatabaseOperations {
    */
   async getTransaction(transactionId: string): Promise<Transaction | null> {
     try {
-      const { data, error } = await this.supabase
+      const supabase = await this.getSupabaseClient();
+      const { data, error } = await supabase
         .from('transactions')
         .select('*')
         .eq('id', transactionId)
@@ -186,31 +189,45 @@ export class TransactionDatabaseOperations {
         sortOrder = 'desc'
       } = options;
 
-      const { data, error } = await this.supabase.rpc('get_transactions_filtered', {
-        org_uuid: orgId,
-        limit_param: limit,
-        offset_param: offset,
-        start_date: startDate,
-        end_date: endDate,
-        category_filter: category,
-        min_confidence: minConfidence,
-        sort_by: sortBy,
-        sort_order: sortOrder
-      });
+      const supabase = await this.getSupabaseClient();
+      
+      // Build query with filters
+      let query = supabase
+        .from('transactions')
+        .select('*', { count: 'exact' })
+        .eq('org_id', orgId);
+
+      // Apply filters
+      if (startDate) {
+        query = query.gte('date', startDate);
+      }
+      if (endDate) {
+        query = query.lte('date', endDate);
+      }
+      if (category) {
+        query = query.eq('category', category);
+      }
+      if (minConfidence !== undefined) {
+        query = query.gte('confidence', minConfidence);
+      }
+
+      // Apply sorting
+      const ascending = sortOrder === 'asc';
+      query = query.order(sortBy, { ascending });
+
+      // Apply pagination
+      query = query.range(offset, offset + limit - 1);
+
+      const { data, error, count } = await query;
 
       if (error) {
+        console.error('Supabase query error in getTransactions:', error);
         throw error;
       }
 
-      const transactions = data || [];
-      const total = transactions.length > 0 ? transactions[0].total_count : 0;
-
-      // Remove total_count from transaction objects
-      const cleanTransactions = transactions.map(({ total_count, ...transaction }) => transaction);
-
       return {
-        transactions: cleanTransactions,
-        total: Number(total)
+        transactions: data || [],
+        total: count || 0
       };
 
     } catch (error) {
@@ -262,7 +279,8 @@ export class TransactionDatabaseOperations {
     categoryBreakdown: Array<{ category: string; count: number; amount: number }>;
   }> {
     try {
-      const { data, error } = await this.supabase.rpc('get_transaction_stats', {
+      const supabase = await this.getSupabaseClient();
+      const { data, error } = await supabase.rpc('get_transaction_stats', {
         org_uuid: orgId,
         start_date: dateRange?.start,
         end_date: dateRange?.end
@@ -336,7 +354,8 @@ export class TransactionDatabaseOperations {
     sampleIds: string[];
   }>> {
     try {
-      const { data, error } = await this.supabase.rpc('validate_transaction_integrity', {
+      const supabase = await this.getSupabaseClient();
+      const { data, error } = await supabase.rpc('validate_transaction_integrity', {
         org_uuid: orgId
       });
 
@@ -365,7 +384,8 @@ export class TransactionDatabaseOperations {
     limit: number = 10
   ): Promise<Transaction[]> {
     try {
-      const { data, error } = await this.supabase
+      const supabase = await this.getSupabaseClient();
+      const { data, error } = await supabase
         .from('transactions')
         .select('*')
         .eq('org_id', orgId)
@@ -394,7 +414,8 @@ export class TransactionDatabaseOperations {
     endDate: string
   ): Promise<Transaction[]> {
     try {
-      const { data, error } = await this.supabase
+      const supabase = await this.getSupabaseClient();
+      const { data, error } = await supabase
         .from('transactions')
         .select('*')
         .eq('org_id', orgId)
@@ -424,7 +445,8 @@ export class TransactionDatabaseOperations {
     limit?: number
   ): Promise<Transaction[]> {
     try {
-      let query = this.supabase
+      const supabase = await this.getSupabaseClient();
+      let query = supabase
         .from('transactions')
         .select('*')
         .eq('org_id', orgId)

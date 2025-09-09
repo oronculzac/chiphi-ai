@@ -1,0 +1,73 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "app/**/*.{ts,tsx}",
+    "components/**/*.{ts,tsx}",
+    "lib/**/*.{ts,tsx}",
+    "hooks/**/*.{ts,tsx}",
+    "middleware.ts",
+    "next.config.mjs",
+    "tailwind.config.ts",
+    "postcss.config.mjs"
+  ],
+  "project": [
+    "**/*.{ts,tsx,js,jsx}",
+    "!**/*.test.{ts,tsx,js,jsx}",
+    "!**/*.spec.{ts,tsx,js,jsx}",
+    "!tests/**",
+    "!scripts/test-*",
+    "!app/test-*/**"
+  ],
+  "ignore": [
+    "**/*.test.{ts,tsx,js,jsx}",
+    "**/*.spec.{ts,tsx,js,jsx}",
+    "tests/**",
+    "scripts/test-*",
+    "app/test-*/**",
+    "node_modules/**",
+    ".next/**",
+    "dist/**",
+    "build/**"
+  ],
+  "ignoreDependencies": [
+    "@playwright/test",
+    "@testing-library/*",
+    "@vitest/*",
+    "vitest",
+    "jsdom",
+    "dotenv"
+  ],
+  "ignoreExportsUsedInFile": true,
+  "includeEntryExports": true,
+  "workspaces": {
+    ".": {
+      "entry": [
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "lib/**/*.{ts,tsx}",
+        "hooks/**/*.{ts,tsx}",
+        "middleware.ts"
+      ],
+      "project": [
+        "**/*.{ts,tsx,js,jsx}",
+        "!**/*.test.{ts,tsx,js,jsx}",
+        "!**/*.spec.{ts,tsx,js,jsx}",
+        "!tests/**",
+        "!scripts/test-*"
+      ]
+    }
+  },
+  "rules": {
+    "files": "error",
+    "dependencies": "error",
+    "devDependencies": "warn",
+    "unlisted": "error",
+    "exports": "error",
+    "nsExports": "error",
+    "classMembers": "error",
+    "types": "error",
+    "nsTypes": "error",
+    "enumMembers": "error",
+    "duplicates": "error"
+  }
+}

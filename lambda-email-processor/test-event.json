@@ -1,0 +1,13 @@
+{
+  "Records": [
+    {
+      "ses": {
+        "receipt": {
+          "action": {
+            "objectKey": "emails/AMAZON_SES_SETUP_NOTIFICATION"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Mail, ArrowRight, ArrowLeft, Copy, Check, Settings, Shield, Zap, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
+import { Mail, ArrowRight, ArrowLeft, Copy, Check, Settings, Shield, Zap, CheckCircle, AlertCircle, Loader2, X } from "lucide-react"
 import type { InboxAlias } from "@/lib/services/inbox-alias"
 
 const steps = [
@@ -632,9 +632,9 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
   return (
     <Card className="w-full max-w-2xl mx-auto" role="main" aria-labelledby="wizard-title">
       <CardHeader className="pb-4">
-        <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center justify-between'}`}>
-          <CardTitle id="wizard-title" className="text-2xl">Gmail Setup Wizard</CardTitle>
-          <Badge variant="outline" aria-label={`Current progress: step ${currentStep} of ${steps.length}`}>
+        <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-start justify-between'}`}>
+          <CardTitle id="wizard-title" className="text-2xl pr-12">Gmail Setup Wizard</CardTitle>
+          <Badge variant="outline" aria-label={`Current progress: step ${currentStep} of ${steps.length}`} className="shrink-0">
             Step {currentStep} of {steps.length}
           </Badge>
         </div>
@@ -663,16 +663,30 @@ export default function GmailSetupWizard({ aliasEmail, onComplete }: GmailSetupW
         </div>
 
         <nav className={`flex ${isMobile ? 'flex-col space-y-3' : 'items-center justify-between'} pt-6 border-t`} aria-label="Wizard navigation">
-          <Button
-            variant="outline"
-            onClick={prevStep}
-            disabled={currentStep === 1}
-            className={`flex items-center gap-2 bg-transparent ${isMobile ? 'w-full' : ''}`}
-            aria-label="Go to previous step"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Previous
-          </Button>
+          <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'gap-2'}`}>
+            <Button
+              variant="outline"
+              onClick={prevStep}
+              disabled={currentStep === 1}
+              className={`flex items-center gap-2 bg-transparent ${isMobile ? 'w-full' : ''}`}
+              aria-label="Go to previous step"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Previous
+            </Button>
+            
+            {currentStep !== steps.length && (
+              <Button
+                variant="ghost"
+                onClick={onComplete}
+                className={`flex items-center gap-2 text-muted-foreground ${isMobile ? 'w-full' : ''}`}
+                aria-label="Skip Gmail setup wizard"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+                Skip Setup
+              </Button>
+            )}
+          </div>
 
           <div className={`flex ${isMobile ? 'w-full' : 'gap-2'}`}>
             {currentStep === steps.length ? (

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { authService } from '@/lib/services/auth';
 
@@ -35,32 +36,46 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [currentOrganization, setCurrentOrganization] = useState<Organization | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasTriedRefresh, setHasTriedRefresh] = useState(false);
 
   const refreshProfile = async (currentUser?: User | null) => {
     const userToUse = currentUser || user;
-    console.log('refreshProfile called, user:', userToUse);
-    if (!userToUse) {
-      console.log('No user, skipping refresh');
+    if (!userToUse || hasTriedRefresh) {
       return;
     }
 
+    setHasTriedRefresh(true);
+
     try {
-      console.log('Fetching /api/auth/me');
-      const response = await fetch('/api/auth/me');
+      const response = await fetch('/api/auth/me', {
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
+      
       if (response.ok) {
         const data = await response.json();
-        console.log('Profile data received:', data);
-        setOrganizations(data.organizations || []);
-        setCurrentOrganization(data.organizations?.[0] || null);
+        if (data.success) {
+          setOrganizations(data.organizations || []);
+          setCurrentOrganization(data.organizations?.[0] || null);
+        }
+      } else if (response.status === 401) {
+        // User is not authenticated, clear state
+        setOrganizations([]);
+        setCurrentOrganization(null);
       } else {
         console.error('Failed to fetch profile:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Failed to refresh profile:', error);
+    } finally {
+      // Reset the flag after a delay to allow for retries if needed
+      setTimeout(() => setHasTriedRefresh(false), 5000);
     }
   };
 
@@ -69,40 +84,50 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
     setOrganizations([]);
     setCurrentOrganization(null);
+    // Redirect to home page after sign out
+    router.push('/');
   };
 
   useEffect(() => {
-    console.log('AuthProvider useEffect running');
+    let mounted = true;
     
     // Get initial session
     authService.getCurrentUser().then((user) => {
-      console.log('Initial user:', user);
+      if (!mounted) return;
+      
       setUser(user);
       setIsLoading(false);
       
       if (user) {
-        console.log('User found, calling refreshProfile');
         refreshProfile(user);
+      }
+    }).catch((error) => {
+      console.error('Failed to get current user:', error);
+      if (mounted) {
+        setIsLoading(false);
       }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = authService.onAuthStateChange((user) => {
-      console.log('Auth state changed, user:', user);
+      if (!mounted) return;
+      
       setUser(user);
       setIsLoading(false);
+      setHasTriedRefresh(false); // Reset refresh flag on auth change
       
       if (user) {
-        console.log('User authenticated, calling refreshProfile');
         refreshProfile(user);
       } else {
-        console.log('User signed out, clearing organizations');
         setOrganizations([]);
         setCurrentOrganization(null);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const value = {

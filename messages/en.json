@@ -1,0 +1,270 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Sign Up",
+    "dashboard": "Dashboard",
+    "reports": "Reports",
+    "transactions": "Transactions",
+    "categories": "Categories",
+    "profile": "Profile"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "reports": "Reports",
+    "transactions": "Transactions",
+    "settings": "Settings"
+  },
+  "reports": {
+    "title": "Reports",
+    "monthToDate": "Month to Date",
+    "totalSpent": "Total Spent",
+    "categoryBreakdown": "Category Breakdown",
+    "dailySpending": "Daily Spending",
+    "noData": "No data available",
+    "exportCsv": "Export CSV",
+    "exportYnab": "Export YNAB",
+    "dateRange": "Date Range",
+    "from": "From",
+    "to": "To",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "searchTransactions": "Search transactions..."
+  },
+  "transactions": {
+    "title": "Transactions",
+    "date": "Date",
+    "amount": "Amount",
+    "merchant": "Merchant",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "notes": "Notes",
+    "confidence": "Confidence",
+    "noTransactions": "No transactions found",
+    "addTransaction": "Add Transaction",
+    "editTransaction": "Edit Transaction",
+    "deleteTransaction": "Delete Transaction"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "validation": "Please check your input and try again.",
+    "server": "Server error. Please try again later."
+  },
+  "settings": {
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "loading": "Loading...",
+      "retry": "Retry",
+      "error": "Error",
+      "success": "Success",
+      "confirm": "Confirm",
+      "close": "Close",
+      "copy": "Copy",
+      "copied": "Copied",
+      "required": "Required",
+      "optional": "Optional",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "tabs": {
+      "organization": "Organization",
+      "inboundEmail": "Inbound Email",
+      "notifications": "Notifications",
+      "data": "Data",
+      "integrations": "Integrations"
+    },
+    "organization": {
+      "title": "Organization Settings",
+      "description": "Manage your organization details and team members.",
+      "name": {
+        "label": "Organization Name",
+        "placeholder": "Enter organization name",
+        "required": "Organization name is required",
+        "maxLength": "Organization name must be less than 100 characters",
+        "saving": "Saving...",
+        "saved": "Organization name saved"
+      },
+      "logo": {
+        "title": "Organization Logo",
+        "description": "Upload a logo for your organization. Supported formats: JPEG, PNG, WebP. Max size: 5MB.",
+        "upload": "Upload Logo",
+        "remove": "Remove Logo",
+        "uploading": "Uploading...",
+        "uploaded": "Logo uploaded successfully",
+        "removed": "Logo removed successfully",
+        "error": "Failed to upload logo",
+        "invalidType": "Invalid file type. Please upload JPEG, PNG, or WebP.",
+        "tooLarge": "File too large. Maximum size is {maxSize}."
+      },
+      "members": {
+        "title": "Team Members",
+        "description": "Invite and manage team members and their roles.",
+        "invite": "Invite Member",
+        "email": "Email",
+        "role": "Role",
+        "joinedAt": "Joined",
+        "actions": "Actions",
+        "roles": {
+          "owner": "Owner",
+          "admin": "Admin",
+          "member": "Member"
+        }
+      }
+    },
+    "inboundEmail": {
+      "title": "Inbound Email Configuration",
+      "description": "Configure your unique email address for receipt processing.",
+      "alias": {
+        "title": "Your Receipt Email",
+        "description": "Forward receipts to this email address for automatic processing.",
+        "copy": "Copy Email",
+        "copied": "Email copied to clipboard"
+      },
+      "verification": {
+        "title": "Email Verification",
+        "description": "Verify your email configuration is working correctly.",
+        "status": "Status",
+        "lastReceived": "Last Email Received",
+        "noEmails": "No emails received yet",
+        "getCode": "Send Test Email",
+        "gettingCode": "Sending...",
+        "verified": "Verified",
+        "pending": "Pending",
+        "codeReceived": "Verification code: {code}",
+        "codeExpires": "Code expires in {time}"
+      }
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "description": "Configure when and how you receive notifications.",
+      "types": {
+        "receiptProcessed": {
+          "label": "Receipt Processed",
+          "description": "Get notified when a receipt is successfully processed"
+        },
+        "dailySummary": {
+          "label": "Daily Summary",
+          "description": "Receive a daily summary of your transactions"
+        },
+        "weeklySummary": {
+          "label": "Weekly Summary",
+          "description": "Receive a weekly summary of your spending"
+        }
+      },
+      "emails": {
+        "title": "Notification Emails",
+        "description": "Add email addresses to receive notifications.",
+        "add": "Add Email",
+        "placeholder": "Enter email address",
+        "adding": "Adding...",
+        "added": "Email added successfully",
+        "remove": "Remove",
+        "removing": "Removing...",
+        "removed": "Email removed successfully",
+        "invalid": "Please enter a valid email address",
+        "duplicate": "This email is already added"
+      },
+      "saving": "Saving preferences...",
+      "saved": "Preferences saved successfully",
+      "error": "Failed to save preferences"
+    },
+    "data": {
+      "title": "Data Management",
+      "description": "Export your data and manage your account.",
+      "export": {
+        "title": "Export Data",
+        "description": "Download your transaction data in various formats.",
+        "dateRange": {
+          "label": "Date Range",
+          "start": "Start Date",
+          "end": "End Date",
+          "invalid": "Please select a valid date range"
+        },
+        "format": {
+          "label": "Export Format",
+          "csv": "CSV (Comma Separated Values)",
+          "ynab": "YNAB (You Need A Budget)"
+        },
+        "buttons": {
+          "csv": "Export as CSV",
+          "ynab": "Export for YNAB",
+          "exporting": "Exporting...",
+          "exported": "Export completed successfully"
+        }
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "description": "Irreversible actions that will permanently delete your data.",
+        "deleteAccount": {
+          "title": "Delete Organization",
+          "description": "Permanently delete your organization and all associated data.",
+          "button": "Delete Organization",
+          "dialog": {
+            "title": "Delete Organization",
+            "description": "This action cannot be undone. All data will be permanently deleted.",
+            "warning": "Please type \"{organizationName}\" to confirm deletion.",
+            "placeholder": "Type organization name here",
+            "mismatch": "Organization name doesn't match",
+            "confirm": "Delete Forever",
+            "cancel": "Cancel",
+            "deleting": "Deleting...",
+            "deleted": "Organization deleted successfully"
+          }
+        }
+      }
+    },
+    "integrations": {
+      "title": "Integrations",
+      "description": "Connect ChiPhi AI with your favorite tools and services.",
+      "comingSoon": "Coming Soon",
+      "googleSheets": {
+        "title": "Google Sheets",
+        "description": "Automatically sync your transactions to Google Sheets",
+        "tooltip": "Google Sheets integration will be available soon"
+      },
+      "notion": {
+        "title": "Notion",
+        "description": "Create and update Notion databases with your transaction data",
+        "tooltip": "Notion integration will be available soon"
+      }
+    }
+  }
+}

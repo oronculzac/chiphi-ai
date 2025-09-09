@@ -1,0 +1,270 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "import": "Importer",
+    "refresh": "Actualiser",
+    "settings": "Paramètres",
+    "help": "Aide",
+    "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "signup": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "reports": "Rapports",
+    "transactions": "Transactions",
+    "categories": "Catégories",
+    "profile": "Profil"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "reports": "Rapports",
+    "transactions": "Transactions",
+    "settings": "Paramètres"
+  },
+  "reports": {
+    "title": "Rapports",
+    "monthToDate": "Mois à ce jour",
+    "totalSpent": "Total dépensé",
+    "categoryBreakdown": "Répartition par catégorie",
+    "dailySpending": "Dépenses quotidiennes",
+    "noData": "Aucune donnée disponible",
+    "exportCsv": "Exporter CSV",
+    "exportYnab": "Exporter YNAB",
+    "dateRange": "Plage de dates",
+    "from": "De",
+    "to": "À",
+    "category": "Catégorie",
+    "allCategories": "Toutes les catégories",
+    "searchTransactions": "Rechercher des transactions..."
+  },
+  "transactions": {
+    "title": "Transactions",
+    "date": "Date",
+    "amount": "Montant",
+    "merchant": "Commerçant",
+    "category": "Catégorie",
+    "subcategory": "Sous-catégorie",
+    "notes": "Notes",
+    "confidence": "Confiance",
+    "noTransactions": "Aucune transaction trouvée",
+    "addTransaction": "Ajouter une transaction",
+    "editTransaction": "Modifier la transaction",
+    "deleteTransaction": "Supprimer la transaction"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "signOut": "Se déconnecter",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "createAccount": "Créer un compte",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?"
+  },
+  "errors": {
+    "generic": "Quelque chose s'est mal passé. Veuillez réessayer.",
+    "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+    "notFound": "La ressource demandée n'a pas été trouvée.",
+    "validation": "Veuillez vérifier votre saisie et réessayer.",
+    "server": "Erreur du serveur. Veuillez réessayer plus tard."
+  },
+  "settings": {
+    "common": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "loading": "Chargement...",
+      "retry": "Réessayer",
+      "error": "Erreur",
+      "success": "Succès",
+      "confirm": "Confirmer",
+      "close": "Fermer",
+      "copy": "Copier",
+      "copied": "Copié",
+      "required": "Requis",
+      "optional": "Optionnel",
+      "enabled": "Activé",
+      "disabled": "Désactivé"
+    },
+    "tabs": {
+      "organization": "Organisation",
+      "inboundEmail": "Email entrant",
+      "notifications": "Notifications",
+      "data": "Données",
+      "integrations": "Intégrations"
+    },
+    "organization": {
+      "title": "Paramètres d'organisation",
+      "description": "Gérez les détails de votre organisation et les membres de l'équipe.",
+      "name": {
+        "label": "Nom de l'organisation",
+        "placeholder": "Entrez le nom de l'organisation",
+        "required": "Le nom de l'organisation est requis",
+        "maxLength": "Le nom de l'organisation doit faire moins de 100 caractères",
+        "saving": "Enregistrement...",
+        "saved": "Nom d'organisation enregistré"
+      },
+      "logo": {
+        "title": "Logo de l'organisation",
+        "description": "Téléchargez un logo pour votre organisation. Formats supportés : JPEG, PNG, WebP. Taille max : 5MB.",
+        "upload": "Télécharger le logo",
+        "remove": "Supprimer le logo",
+        "uploading": "Téléchargement...",
+        "uploaded": "Logo téléchargé avec succès",
+        "removed": "Logo supprimé avec succès",
+        "error": "Échec du téléchargement du logo",
+        "invalidType": "Type de fichier invalide. Veuillez télécharger JPEG, PNG, ou WebP.",
+        "tooLarge": "Fichier trop volumineux. La taille maximale est {maxSize}."
+      },
+      "members": {
+        "title": "Membres de l'équipe",
+        "description": "Invitez et gérez les membres de l'équipe et leurs rôles.",
+        "invite": "Inviter un membre",
+        "email": "Email",
+        "role": "Rôle",
+        "joinedAt": "Rejoint",
+        "actions": "Actions",
+        "roles": {
+          "owner": "Propriétaire",
+          "admin": "Administrateur",
+          "member": "Membre"
+        }
+      }
+    },
+    "inboundEmail": {
+      "title": "Configuration email entrant",
+      "description": "Configurez votre adresse email unique pour le traitement des reçus.",
+      "alias": {
+        "title": "Votre email de reçus",
+        "description": "Transférez les reçus à cette adresse email pour un traitement automatique.",
+        "copy": "Copier l'email",
+        "copied": "Email copié dans le presse-papiers"
+      },
+      "verification": {
+        "title": "Vérification email",
+        "description": "Vérifiez que votre configuration email fonctionne correctement.",
+        "status": "Statut",
+        "lastReceived": "Dernier email reçu",
+        "noEmails": "Aucun email reçu pour le moment",
+        "getCode": "Envoyer un email de test",
+        "gettingCode": "Envoi...",
+        "verified": "Vérifié",
+        "pending": "En attente",
+        "codeReceived": "Code de vérification : {code}",
+        "codeExpires": "Le code expire dans {time}"
+      }
+    },
+    "notifications": {
+      "title": "Préférences de notification",
+      "description": "Configurez quand et comment vous recevez les notifications.",
+      "types": {
+        "receiptProcessed": {
+          "label": "Reçu traité",
+          "description": "Recevez une notification quand un reçu est traité avec succès"
+        },
+        "dailySummary": {
+          "label": "Résumé quotidien",
+          "description": "Recevez un résumé quotidien de vos transactions"
+        },
+        "weeklySummary": {
+          "label": "Résumé hebdomadaire",
+          "description": "Recevez un résumé hebdomadaire de vos dépenses"
+        }
+      },
+      "emails": {
+        "title": "Emails de notification",
+        "description": "Ajoutez des adresses email pour recevoir les notifications.",
+        "add": "Ajouter un email",
+        "placeholder": "Entrez l'adresse email",
+        "adding": "Ajout...",
+        "added": "Email ajouté avec succès",
+        "remove": "Supprimer",
+        "removing": "Suppression...",
+        "removed": "Email supprimé avec succès",
+        "invalid": "Veuillez entrer une adresse email valide",
+        "duplicate": "Cet email a déjà été ajouté"
+      },
+      "saving": "Enregistrement des préférences...",
+      "saved": "Préférences enregistrées avec succès",
+      "error": "Échec de l'enregistrement des préférences"
+    },
+    "data": {
+      "title": "Gestion des données",
+      "description": "Exportez vos données et gérez votre compte.",
+      "export": {
+        "title": "Exporter les données",
+        "description": "Téléchargez vos données de transaction dans divers formats.",
+        "dateRange": {
+          "label": "Plage de dates",
+          "start": "Date de début",
+          "end": "Date de fin",
+          "invalid": "Veuillez sélectionner une plage de dates valide"
+        },
+        "format": {
+          "label": "Format d'exportation",
+          "csv": "CSV (Valeurs séparées par des virgules)",
+          "ynab": "YNAB (You Need A Budget)"
+        },
+        "buttons": {
+          "csv": "Exporter en CSV",
+          "ynab": "Exporter pour YNAB",
+          "exporting": "Exportation...",
+          "exported": "Exportation terminée avec succès"
+        }
+      },
+      "dangerZone": {
+        "title": "Zone de danger",
+        "description": "Actions irréversibles qui supprimeront définitivement vos données.",
+        "deleteAccount": {
+          "title": "Supprimer l'organisation",
+          "description": "Supprimez définitivement votre organisation et toutes les données associées.",
+          "button": "Supprimer l'organisation",
+          "dialog": {
+            "title": "Supprimer l'organisation",
+            "description": "Cette action ne peut pas être annulée. Toutes les données seront supprimées définitivement.",
+            "warning": "Veuillez taper \"{organizationName}\" pour confirmer la suppression.",
+            "placeholder": "Tapez le nom de l'organisation ici",
+            "mismatch": "Le nom de l'organisation ne correspond pas",
+            "confirm": "Supprimer définitivement",
+            "cancel": "Annuler",
+            "deleting": "Suppression...",
+            "deleted": "Organisation supprimée avec succès"
+          }
+        }
+      }
+    },
+    "integrations": {
+      "title": "Intégrations",
+      "description": "Connectez ChiPhi AI avec vos outils et services préférés.",
+      "comingSoon": "Bientôt disponible",
+      "googleSheets": {
+        "title": "Google Sheets",
+        "description": "Synchronisez automatiquement vos transactions avec Google Sheets",
+        "tooltip": "L'intégration Google Sheets sera bientôt disponible"
+      },
+      "notion": {
+        "title": "Notion",
+        "description": "Créez et mettez à jour des bases de données Notion avec vos données de transaction",
+        "tooltip": "L'intégration Notion sera bientôt disponible"
+      }
+    }
+  }
+}

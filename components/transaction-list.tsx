@@ -236,17 +236,17 @@ export function TransactionList({ orgId, onCategoryUpdate, filter = 'all' }: Tra
               <div>
                 <label htmlFor="confidence-filter" className="text-sm font-medium">Min Confidence</label>
                 <Select
-                  value={filters.minConfidence?.toString() || ''}
+                  value={filters.minConfidence?.toString() || 'any'}
                   onValueChange={(value) => setFilters(prev => ({ 
                     ...prev, 
-                    minConfidence: value ? parseInt(value) : undefined 
+                    minConfidence: value === 'any' ? undefined : parseInt(value) 
                   }))}
                 >
                   <SelectTrigger id="confidence-filter" aria-describedby="confidence-filter-desc">
                     <SelectValue placeholder="Any confidence" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Any confidence</SelectItem>
+                    <SelectItem value="any">Any confidence</SelectItem>
                     <SelectItem value="80">High (80%+)</SelectItem>
                     <SelectItem value="60">Medium (60%+)</SelectItem>
                     <SelectItem value="40">Low (40%+)</SelectItem>
@@ -318,14 +318,14 @@ export function TransactionList({ orgId, onCategoryUpdate, filter = 'all' }: Tra
             </div>
           ) : (
             <div className="overflow-x-auto">
+              <div id="transactions-table-desc" className="sr-only">
+                Table showing {transactions.length} transactions with columns for date, merchant, amount, category, confidence, and actions
+              </div>
               <Table 
                 role="table" 
                 aria-labelledby="transactions-table-title"
                 aria-describedby="transactions-table-desc"
               >
-                <div id="transactions-table-desc" className="sr-only">
-                  Table showing {transactions.length} transactions with columns for date, merchant, amount, category, confidence, and actions
-                </div>
                 <TableHeader>
                   <TableRow>
                     <TableHead scope="col">Date</TableHead>
@@ -393,16 +393,18 @@ export function TransactionList({ orgId, onCategoryUpdate, filter = 'all' }: Tra
                                 {isMobile ? <Info className="w-4 h-4" /> : 'View'}
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-2xl" aria-describedby="transaction-detail-desc">
-                              <DialogHeader>
+                            <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden" aria-describedby="transaction-detail-desc">
+                              <DialogHeader className="pb-4">
                                 <DialogTitle>Transaction Details</DialogTitle>
                                 <div id="transaction-detail-desc" className="sr-only">
                                   Detailed view of the selected transaction including original text and AI analysis
                                 </div>
                               </DialogHeader>
-                              {selectedTransaction && (
-                                <TransactionDetailView transaction={selectedTransaction} />
-                              )}
+                              <div className="overflow-y-auto pr-2">
+                                {selectedTransaction && (
+                                  <TransactionDetailView transaction={selectedTransaction} />
+                                )}
+                              </div>
                             </DialogContent>
                           </Dialog>
                           

@@ -168,12 +168,12 @@ export function ExportDialog({
               <SelectTrigger>
                 <SelectValue placeholder="Select format" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="min-w-[300px] max-w-[400px]">
                 {exportFormats.map((format) => (
-                  <SelectItem key={format.value} value={format.value}>
-                    <div className="flex flex-col">
+                  <SelectItem key={format.value} value={format.value} className="p-3">
+                    <div className="flex flex-col w-full">
                       <span className="font-medium">{format.label}</span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-muted-foreground break-words whitespace-normal leading-relaxed">
                         {format.description}
                       </span>
                     </div>
@@ -248,16 +248,16 @@ export function ExportDialog({
             <div className="grid gap-2">
               <Label>Categories (Optional)</Label>
               <Select
-                value={selectedCategories.join(',')}
+                value={selectedCategories.length > 0 ? selectedCategories.join(',') : 'all'}
                 onValueChange={(value) => {
-                  setSelectedCategories(value ? value.split(',') : []);
+                  setSelectedCategories(value === 'all' ? [] : value.split(','));
                 }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="All categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All categories</SelectItem>
+                  <SelectItem value="all">All categories</SelectItem>
                   {availableCategories.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}

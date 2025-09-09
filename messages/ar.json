@@ -1,0 +1,270 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "import": "استيراد",
+    "refresh": "تحديث",
+    "settings": "الإعدادات",
+    "help": "مساعدة",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "signup": "التسجيل",
+    "dashboard": "لوحة التحكم",
+    "reports": "التقارير",
+    "transactions": "المعاملات",
+    "categories": "الفئات",
+    "profile": "الملف الشخصي"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "reports": "التقارير",
+    "transactions": "المعاملات",
+    "settings": "الإعدادات"
+  },
+  "reports": {
+    "title": "التقارير",
+    "monthToDate": "من بداية الشهر حتى اليوم",
+    "totalSpent": "إجمالي المصروفات",
+    "categoryBreakdown": "تفصيل حسب الفئة",
+    "dailySpending": "الإنفاق اليومي",
+    "noData": "لا توجد بيانات متاحة",
+    "exportCsv": "تصدير CSV",
+    "exportYnab": "تصدير YNAB",
+    "dateRange": "نطاق التاريخ",
+    "from": "من",
+    "to": "إلى",
+    "category": "الفئة",
+    "allCategories": "جميع الفئات",
+    "searchTransactions": "البحث في المعاملات..."
+  },
+  "transactions": {
+    "title": "المعاملات",
+    "date": "التاريخ",
+    "amount": "المبلغ",
+    "merchant": "التاجر",
+    "category": "الفئة",
+    "subcategory": "الفئة الفرعية",
+    "notes": "ملاحظات",
+    "confidence": "الثقة",
+    "noTransactions": "لم يتم العثور على معاملات",
+    "addTransaction": "إضافة معاملة",
+    "editTransaction": "تعديل المعاملة",
+    "deleteTransaction": "حذف المعاملة"
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signUp": "التسجيل",
+    "signOut": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "createAccount": "إنشاء حساب",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "dontHaveAccount": "ليس لديك حساب؟"
+  },
+  "errors": {
+    "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "network": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+    "unauthorized": "غير مخول لك تنفيذ هذا الإجراء.",
+    "notFound": "لم يتم العثور على المورد المطلوب.",
+    "validation": "يرجى التحقق من إدخالك والمحاولة مرة أخرى.",
+    "server": "خطأ في الخادم. يرجى المحاولة لاحقاً."
+  },
+  "settings": {
+    "common": {
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "loading": "جاري التحميل...",
+      "retry": "إعادة المحاولة",
+      "error": "خطأ",
+      "success": "نجح",
+      "confirm": "تأكيد",
+      "close": "إغلاق",
+      "copy": "نسخ",
+      "copied": "تم النسخ",
+      "required": "مطلوب",
+      "optional": "اختياري",
+      "enabled": "مفعل",
+      "disabled": "معطل"
+    },
+    "tabs": {
+      "organization": "المنظمة",
+      "inboundEmail": "البريد الوارد",
+      "notifications": "الإشعارات",
+      "data": "البيانات",
+      "integrations": "التكاملات"
+    },
+    "organization": {
+      "title": "إعدادات المنظمة",
+      "description": "إدارة تفاصيل منظمتك وأعضاء الفريق.",
+      "name": {
+        "label": "اسم المنظمة",
+        "placeholder": "أدخل اسم المنظمة",
+        "required": "اسم المنظمة مطلوب",
+        "maxLength": "يجب أن يكون اسم المنظمة أقل من 100 حرف",
+        "saving": "جاري الحفظ...",
+        "saved": "تم حفظ اسم المنظمة"
+      },
+      "logo": {
+        "title": "شعار المنظمة",
+        "description": "ارفع شعاراً لمنظمتك. الصيغ المدعومة: JPEG، PNG، WebP. الحد الأقصى للحجم: 5 ميجابايت.",
+        "upload": "رفع الشعار",
+        "remove": "إزالة الشعار",
+        "uploading": "جاري الرفع...",
+        "uploaded": "تم رفع الشعار بنجاح",
+        "removed": "تم حذف الشعار بنجاح",
+        "error": "فشل في رفع الشعار",
+        "invalidType": "نوع ملف غير صالح. يرجى رفع JPEG أو PNG أو WebP.",
+        "tooLarge": "الملف كبير جداً. الحد الأقصى للحجم هو {maxSize}."
+      },
+      "members": {
+        "title": "أعضاء الفريق",
+        "description": "دعوة وإدارة أعضاء الفريق وأدوارهم.",
+        "invite": "دعوة عضو",
+        "email": "البريد الإلكتروني",
+        "role": "الدور",
+        "joinedAt": "انضم في",
+        "actions": "الإجراءات",
+        "roles": {
+          "owner": "المالك",
+          "admin": "المدير",
+          "member": "العضو"
+        }
+      }
+    },
+    "inboundEmail": {
+      "title": "إعداد البريد الوارد",
+      "description": "قم بتكوين عنوان بريدك الإلكتروني الفريد لمعالجة الإيصالات.",
+      "alias": {
+        "title": "بريد الإيصالات الخاص بك",
+        "description": "أعد توجيه الإيصالات إلى عنوان البريد الإلكتروني هذا للمعالجة التلقائية.",
+        "copy": "نسخ البريد الإلكتروني",
+        "copied": "تم نسخ البريد الإلكتروني إلى الحافظة"
+      },
+      "verification": {
+        "title": "التحقق من البريد الإلكتروني",
+        "description": "تحقق من أن إعداد بريدك الإلكتروني يعمل بشكل صحيح.",
+        "status": "الحالة",
+        "lastReceived": "آخر بريد إلكتروني مستلم",
+        "noEmails": "لم يتم استلام أي رسائل بريد إلكتروني بعد",
+        "getCode": "إرسال بريد إلكتروني تجريبي",
+        "gettingCode": "جاري الإرسال...",
+        "verified": "تم التحقق",
+        "pending": "في الانتظار",
+        "codeReceived": "رمز التحقق: {code}",
+        "codeExpires": "ينتهي الرمز في {time}"
+      }
+    },
+    "notifications": {
+      "title": "تفضيلات الإشعارات",
+      "description": "قم بتكوين متى وكيف تتلقى الإشعارات.",
+      "types": {
+        "receiptProcessed": {
+          "label": "تمت معالجة الإيصال",
+          "description": "احصل على إشعار عند معالجة إيصال بنجاح"
+        },
+        "dailySummary": {
+          "label": "الملخص اليومي",
+          "description": "احصل على ملخص يومي لمعاملاتك"
+        },
+        "weeklySummary": {
+          "label": "الملخص الأسبوعي",
+          "description": "احصل على ملخص أسبوعي لإنفاقك"
+        }
+      },
+      "emails": {
+        "title": "رسائل الإشعارات الإلكترونية",
+        "description": "أضف عناوين بريد إلكتروني لتلقي الإشعارات.",
+        "add": "إضافة بريد إلكتروني",
+        "placeholder": "أدخل عنوان البريد الإلكتروني",
+        "adding": "جاري الإضافة...",
+        "added": "تم إضافة البريد الإلكتروني بنجاح",
+        "remove": "إزالة",
+        "removing": "جاري الإزالة...",
+        "removed": "تم حذف البريد الإلكتروني بنجاح",
+        "invalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+        "duplicate": "تم إضافة هذا البريد الإلكتروني بالفعل"
+      },
+      "saving": "جاري حفظ التفضيلات...",
+      "saved": "تم حفظ التفضيلات بنجاح",
+      "error": "فشل في حفظ التفضيلات"
+    },
+    "data": {
+      "title": "إدارة البيانات",
+      "description": "قم بتصدير بياناتك وإدارة حسابك.",
+      "export": {
+        "title": "تصدير البيانات",
+        "description": "قم بتنزيل بيانات معاملاتك بصيغ مختلفة.",
+        "dateRange": {
+          "label": "نطاق التاريخ",
+          "start": "تاريخ البداية",
+          "end": "تاريخ النهاية",
+          "invalid": "يرجى اختيار نطاق تاريخ صالح"
+        },
+        "format": {
+          "label": "صيغة التصدير",
+          "csv": "CSV (قيم مفصولة بفواصل)",
+          "ynab": "YNAB (You Need A Budget)"
+        },
+        "buttons": {
+          "csv": "تصدير كـ CSV",
+          "ynab": "تصدير لـ YNAB",
+          "exporting": "جاري التصدير...",
+          "exported": "تم التصدير بنجاح"
+        }
+      },
+      "dangerZone": {
+        "title": "المنطقة الخطرة",
+        "description": "إجراءات لا رجعة فيها ستحذف بياناتك نهائياً.",
+        "deleteAccount": {
+          "title": "حذف المنظمة",
+          "description": "احذف منظمتك وجميع البيانات المرتبطة بها نهائياً.",
+          "button": "حذف المنظمة",
+          "dialog": {
+            "title": "حذف المنظمة",
+            "description": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف جميع البيانات نهائياً.",
+            "warning": "يرجى كتابة \"{organizationName}\" لتأكيد الحذف.",
+            "placeholder": "اكتب اسم المنظمة هنا",
+            "mismatch": "اسم المنظمة غير متطابق",
+            "confirm": "حذف نهائياً",
+            "cancel": "إلغاء",
+            "deleting": "جاري الحذف...",
+            "deleted": "تم حذف المنظمة بنجاح"
+          }
+        }
+      }
+    },
+    "integrations": {
+      "title": "التكاملات",
+      "description": "اربط ChiPhi AI بأدواتك وخدماتك المفضلة.",
+      "comingSoon": "قريباً",
+      "googleSheets": {
+        "title": "Google Sheets",
+        "description": "مزامنة معاملاتك تلقائياً مع Google Sheets",
+        "tooltip": "تكامل Google Sheets سيكون متاحاً قريباً"
+      },
+      "notion": {
+        "title": "Notion",
+        "description": "إنشاء وتحديث قواعد بيانات Notion ببيانات معاملاتك",
+        "tooltip": "تكامل Notion سيكون متاحاً قريباً"
+      }
+    }
+  }
+}

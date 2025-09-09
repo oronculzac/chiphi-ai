@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* RTL (Right-to-Left) support */
+@import '../styles/rtl.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -234,6 +237,50 @@
 
     .print-break-after {
       break-after: page;
+    }
+  }
+}
+/* Dialog and Modal Fixes */
+@layer components {
+  /* Ensure dialog content stays within viewport */
+  [data-slot="dialog-content"] {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Fix select dropdown positioning in dialogs */
+  [data-slot="select-content"] {
+    max-width: calc(100vw - 2rem);
+    z-index: 60; /* Higher than dialog overlay */
+  }
+
+  /* Ensure select items wrap properly */
+  [data-slot="select-item"] {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  /* Chart container improvements */
+  .recharts-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Donut chart legend improvements */
+  .recharts-legend-wrapper {
+    position: static !important;
+    transform: none !important;
+  }
+
+  /* Responsive chart improvements */
+  @media (max-width: 768px) {
+    [data-slot="dialog-content"] {
+      max-width: calc(100vw - 1rem);
+      margin: 0.5rem;
+    }
+    
+    .recharts-pie-sector {
+      cursor: pointer;
     }
   }
 }

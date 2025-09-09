@@ -3,6 +3,7 @@ import { aiProcessingPipeline } from './ai-processing-pipeline';
 import { transactionProcessor } from './transaction-processor';
 import { errorHandler } from './error-handler';
 import { loggingService } from './logging-service';
+import { correlationService } from './correlation-service';
 import { retryService } from './retry-service';
 import { notificationService } from './notification-service';
 import { advancedEmailProcessor } from './advanced-email-processor';
@@ -45,6 +46,8 @@ export class EnhancedEmailProcessor {
 
   /**
    * Process email to transaction with comprehensive error handling and advanced features
+   * Enhanced for SES integration with AI pipeline support
+   * Requirements: 7.1, 7.2, 7.3, 7.4
    */
   async processEmailToTransaction(
     emailId: string,
@@ -54,7 +57,7 @@ export class EnhancedEmailProcessor {
     metadata?: Record<string, any>
   ): Promise<EmailProcessingResult> {
     const startTime = Date.now();
-    const correlationId = loggingService.generateCorrelationId();
+    const correlationId = metadata?.correlationId || loggingService.generateCorrelationId();
     const steps: EmailProcessingResult['steps'] = [];
 
     try {
@@ -143,10 +146,10 @@ export class EnhancedEmailProcessor {
         advancedResult.attachmentTexts
       );
 
-      // Step 4: AI Processing Pipeline with enhanced content
+      // Step 4: AI Processing Pipeline with enhanced content and SES support
       const aiProcessingStep = await this.executeStep(
         'ai_processing',
-        () => aiProcessingPipeline.processReceiptText(combinedContent, orgId, emailId),
+        () => this.processWithAIPipeline(combinedContent, orgId, emailId, metadata),
         { orgId, emailId, correlationId }
       );
       steps.push(aiProcessingStep);
@@ -186,6 +189,19 @@ export class EnhancedEmailProcessor {
       }
 
       const transaction = transactionStep.details?.result as Transaction;
+
+      // Link correlation with transaction if correlation ID is available
+      if (correlationId && correlationId !== 'unknown') {
+        try {
+          await correlationService.linkWithTransactionRecord(
+            correlationId,
+            transaction.id,
+            emailId
+          );
+        } catch (correlationError) {
+          console.warn('Failed to link correlation with transaction:', correlationError);
+        }
+      }
 
       // Step 6: Post-processing notifications with security alerts
       const notificationStep = await this.executeStep(
@@ -492,7 +508,8 @@ export class EnhancedEmailProcessor {
   }
 
   /**
-   * Create transaction from AI processing result with security context
+   * Create transaction from AI processing result with security context and SES support
+   * Requirements: 7.1, 7.2, 7.3, 7.4
    */
   private async createTransactionFromResult(
     emailId: string,
@@ -505,10 +522,11 @@ export class EnhancedEmailProcessor {
       forwardedChain?: any;
     }
   ): Promise<Transaction> {
-    const transaction = await transactionProcessor.processEmailToTransaction(
+    // Create transaction with enhanced SES processing result
+    const transaction = await transactionProcessor.createTransactionFromSESResult(
       emailId,
       orgId,
-      processingResult.translationResult.originalText,
+      processingResult,
       userId
     );
 
@@ -532,6 +550,14 @@ export class EnhancedEmailProcessor {
       transaction.notes = transaction.notes 
         ? `${transaction.notes}\n\n${chainInfo}`
         : chainInfo;
+    }
+
+    // Add SES-specific metadata if available
+    if (processingResult.provider === 'ses' || processingResult.rawRef) {
+      const sesInfo = `[SES] Provider: ${processingResult.provider || 'ses'}, Raw ref: ${processingResult.rawRef || 'unknown'}`;
+      transaction.notes = transaction.notes 
+        ? `${transaction.notes}\n\n${sesInfo}`
+        : sesInfo;
     }
 
     return transaction;
@@ -640,6 +666,97 @@ export class EnhancedEmailProcessor {
       }
     } catch (error) {
       console.error('Failed to send processing notifications:', error);
+    }
+  }
+
+  /**
+   * Process email content through AI pipeline with SES-specific enhancements
+   * Requirements: 7.1, 7.2, 7.3, 7.4
+   */
+  private async processWithAIPipeline(
+    combinedContent: string,
+    orgId: string,
+    emailId: string,
+    metadata?: Record<string, any>
+  ): Promise<any> {
+    const startTime = Date.now();
+    const correlationId = metadata?.correlationId || loggingService.generateCorrelationId();
+    const provider = metadata?.provider || 'unknown';
+    const rawRef = metadata?.rawRef;
+
+    try {
+      // Enhanced AI processing with SES-specific context
+      const processingResult = await aiProcessingPipeline.processReceiptText(
+        combinedContent, 
+        orgId, 
+        emailId
+      );
+
+      // Add SES-specific metadata to the result
+      const enhancedResult = {
+        ...processingResult,
+        provider,
+        rawRef,
+        correlationId,
+        fallbackUsed: processingResult.fallbackUsed || false,
+        processingMetadata: {
+          hasOriginalText: !!processingResult.translationResult.originalText,
+          hasTranslatedText: !!processingResult.translationResult.translatedText,
+          sourceLanguage: processingResult.translationResult.sourceLanguage,
+          wasTranslated: processingResult.translationResult.sourceLanguage.toLowerCase() !== 'english',
+          confidenceScore: processingResult.receiptData.confidence,
+          explanation: processingResult.receiptData.explanation,
+          appliedMapping: processingResult.appliedMapping,
+          processingTimeMs: processingResult.processingTimeMs,
+          fallbackUsed: processingResult.fallbackUsed || false,
+        }
+      };
+
+      // Log SES-specific AI processing completion
+      await loggingService.logProcessingStep({
+        orgId,
+        emailId,
+        step: 'ses_ai_processing_complete',
+        status: 'completed',
+        details: {
+          provider,
+          rawRef,
+          confidence: processingResult.receiptData.confidence,
+          wasTranslated: enhancedResult.processingMetadata.wasTranslated,
+          sourceLanguage: processingResult.translationResult.sourceLanguage,
+          appliedMapping: processingResult.appliedMapping,
+          fallbackUsed: processingResult.fallbackUsed || false,
+          processingTimeMs: processingResult.processingTimeMs,
+          correlationId,
+        },
+        processingTimeMs: processingResult.processingTimeMs,
+        correlationId,
+      });
+
+      return enhancedResult;
+
+    } catch (error) {
+      const processingTimeMs = Date.now() - startTime;
+      
+      // Log SES-specific AI processing failure
+      await loggingService.logProcessingStep({
+        orgId,
+        emailId,
+        step: 'ses_ai_processing_failed',
+        status: 'failed',
+        details: {
+          provider,
+          rawRef,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          processingTimeMs,
+          correlationId,
+        },
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        processingTimeMs,
+        correlationId,
+      });
+
+      throw error;
     }
   }
 

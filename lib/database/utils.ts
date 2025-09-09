@@ -1,52 +1,65 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
+import { getSupabaseClient, withQueryPerformanceMonitoring } from './connection-pool';
 import { UserSession, Org, User, OrgMember, InboxAlias } from '@/lib/types';
 
 /**
  * Get user session with org information
  */
 export async function getUserSession(): Promise<UserSession | null> {
-  const supabase = createClient();
-  
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
-    return null;
-  }
+  return withQueryPerformanceMonitoring('getUserSession', async () => {
+    const supabase = await createClient();
+    
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return null;
+    }
 
-  // Get user profile and org membership
-  const { data: userProfile, error: userError } = await supabase
-    .from('users')
-    .select(`
-      *,
-      org_members!inner (
+    // Get user profile and org membership
+    const { data: userProfile, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (userError || !userProfile) {
+      return null;
+    }
+
+    // Get user's organization memberships (handle multiple orgs)
+    const { data: memberships, error: membershipError } = await supabase
+      .from('org_members')
+      .select(`
         role,
+        org_id,
         orgs!inner (*)
-      )
-    `)
-    .eq('id', user.id)
-    .single();
+      `)
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true }); // Use the first created organization as default
 
-  if (userError || !userProfile) {
-    return null;
-  }
+    if (membershipError || !memberships || memberships.length === 0) {
+      return null;
+    }
 
-  const orgMember = userProfile.org_members[0];
-  const org = orgMember.orgs;
+    // Use the first organization as the default context
+    const orgMember = memberships[0];
+    const org = orgMember.orgs;
 
-  // Get inbox alias
-  const { data: inboxAlias } = await supabase
-    .from('inbox_aliases')
-    .select('*')
-    .eq('org_id', org.id)
-    .eq('is_active', true)
-    .single();
+    // Get inbox alias
+    const { data: inboxAlias } = await supabase
+      .from('inbox_aliases')
+      .select('*')
+      .eq('org_id', org.id)
+      .eq('is_active', true)
+      .single();
 
-  return {
-    user: userProfile,
-    org,
-    role: orgMember.role,
-    inboxAlias: inboxAlias || undefined,
-  };
+    return {
+      user: userProfile,
+      org,
+      role: orgMember.role,
+      inboxAlias: inboxAlias || undefined,
+    };
+  });
 }
 
 /**
@@ -76,41 +89,45 @@ export async function createUserProfile(
  * Get organization by ID with member check
  */
 export async function getOrganization(orgId: string, userId: string): Promise<Org | null> {
-  const supabase = createClient();
-  
-  const { data, error } = await supabase
-    .from('orgs')
-    .select(`
-      *,
-      org_members!inner (
-        role
-      )
-    `)
-    .eq('id', orgId)
-    .eq('org_members.user_id', userId)
-    .single();
+  return withQueryPerformanceMonitoring('getOrganization', async () => {
+    const supabase = await createClient();
+    
+    const { data, error } = await supabase
+      .from('orgs')
+      .select(`
+        *,
+        org_members!inner (
+          role
+        )
+      `)
+      .eq('id', orgId)
+      .eq('org_members.user_id', userId)
+      .single();
 
-  if (error || !data) {
-    return null;
-  }
+    if (error || !data) {
+      return null;
+    }
 
-  return data;
+    return data;
+  });
 }
 
 /**
  * Check if user has access to organization
  */
 export async function hasOrgAccess(orgId: string, userId: string): Promise<boolean> {
-  const supabase = createClient();
-  
-  const { data, error } = await supabase
-    .from('org_members')
-    .select('org_id')
-    .eq('org_id', orgId)
-    .eq('user_id', userId)
-    .single();
+  return withQueryPerformanceMonitoring('hasOrgAccess', async () => {
+    const supabase = await createClient();
+    
+    const { data, error } = await supabase
+      .from('org_members')
+      .select('org_id')
+      .eq('org_id', orgId)
+      .eq('user_id', userId)
+      .single();
 
-  return !error && !!data;
+    return !error && !!data;
+  });
 }
 
 /**
@@ -185,7 +202,10 @@ export async function logProcessingStep(
   status: 'started' | 'completed' | 'failed',
   details?: any,
   errorMessage?: string,
-  processingTime?: number
+  processingTime?: number,
+  correlationId?: string,
+  rawRef?: string,
+  messageId?: string
 ): Promise<void> {
   const supabase = createAdminClient();
   
@@ -197,6 +217,9 @@ export async function logProcessingStep(
     step_details: details,
     error_msg: errorMessage,
     processing_time: processingTime,
+    correlation_id_param: correlationId,
+    raw_ref_param: rawRef,
+    message_id_param: messageId,
   });
 
   if (error) {

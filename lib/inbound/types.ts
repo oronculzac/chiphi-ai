@@ -221,6 +221,25 @@ export const SESMailSchema = z.object({
   }).optional(),
 });
 
+// Lambda-processed SES payload schema (compact JSON format)
+export const SESLambdaPayloadSchema = z.object({
+  alias: z.string(),
+  messageId: z.string(),
+  from: z.string(),
+  to: z.string(),
+  subject: z.string().optional(),
+  text: z.string().optional(),
+  html: z.string().optional(),
+  rawRef: z.string().optional(),
+  receivedAt: z.string().optional(),
+  attachments: z.array(z.object({
+    name: z.string(),
+    contentType: z.string(),
+    size: z.number(),
+    key: z.string().optional(),
+  })).optional(),
+});
+
 /**
  * Utility functions for payload normalization
  */

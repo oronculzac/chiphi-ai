@@ -1,0 +1,82 @@
+#!/bin/sh
+
+# Pre-commit hook for ChiPhi AI
+# Runs validation checks before allowing commits
+
+echo "🔍 Running pre-commit validations..."
+
+# Check if this is a merge commit
+if git rev-parse --verify MERGE_HEAD > /dev/null 2>&1; then
+    echo "✓ Merge commit detected - skipping pre-commit hooks"
+    exit 0
+fi
+
+# Function to run validation and handle errors
+run_validation() {
+    local name=$1
+    local command=$2
+    
+    echo "🧪 Running $name..."
+    
+    if eval "$command"; then
+        echo "✅ $name passed"
+        return 0
+    else
+        echo "❌ $name failed"
+        return 1
+    fi
+}
+
+# Track validation results
+failed_validations=0
+
+# Validate Tailwind configuration
+if ! run_validation "Tailwind validation" "npm run validate:tailwind"; then
+    failed_validations=$((failed_validations + 1))
+fi
+
+# Validate CSS health
+if ! run_validation "CSS health check" "npm run validate:css"; then
+    failed_validations=$((failed_validations + 1))
+fi
+
+# Validate Tailwind directives
+if ! run_validation "Tailwind directives check" "npm run validate:tailwind-directives"; then
+    failed_validations=$((failed_validations + 1))
+fi
+
+# Check for CSS configuration changes
+if ! run_validation "CSS changes validation" "npm run validate:css-changes"; then
+    # CSS changes validation failure is a warning, not a blocker
+    echo "⚠️  CSS changes detected - review carefully"
+fi
+
+# Run TypeScript check
+if ! run_validation "TypeScript check" "npm run type-check"; then
+    failed_validations=$((failed_validations + 1))
+fi
+
+# Run unit tests (quick validation)
+if ! run_validation "Unit tests" "npm run test:unit -- --run --reporter=basic"; then
+    failed_validations=$((failed_validations + 1))
+fi
+
+# Summary
+echo ""
+echo "📊 Pre-commit validation summary:"
+
+if [ $failed_validations -eq 0 ]; then
+    echo "✅ All validations passed - commit allowed"
+    exit 0
+else
+    echo "❌ $failed_validations validation(s) failed - commit blocked"
+    echo ""
+    echo "💡 To fix issues:"
+    echo "  • Run 'npm run validate:tailwind' to check Tailwind configuration"
+    echo "  • Run 'npm run validate:css' to check CSS health"
+    echo "  • Run 'npm run type-check' to check TypeScript errors"
+    echo "  • Run 'npm run test:unit' to run unit tests"
+    echo ""
+    echo "🚫 To bypass this hook (not recommended): git commit --no-verify"
+    exit 1
+fi

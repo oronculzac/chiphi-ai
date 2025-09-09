@@ -1,0 +1,115 @@
+/* RTL (Right-to-Left) Layout Support */
+
+/* Base RTL styles */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Flex direction adjustments for RTL */
+.rtl .flex {
+  flex-direction: row-reverse;
+}
+
+.rtl .flex-col {
+  flex-direction: column;
+}
+
+/* Margin and padding adjustments */
+.rtl .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.rtl .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+.rtl .mr-4 {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+.rtl .ml-4 {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+/* Text alignment */
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+/* Border radius adjustments */
+.rtl .rounded-l {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
+.rtl .rounded-r {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+/* Icon positioning in buttons */
+.rtl .lucide {
+  transform: scaleX(-1);
+}
+
+/* Specific adjustments for settings components */
+.rtl .settings-card {
+  text-align: right;
+}
+
+.rtl .settings-form-field {
+  text-align: right;
+}
+
+.rtl .settings-button-group {
+  flex-direction: row-reverse;
+}
+
+/* Tab navigation RTL support */
+.rtl .tabs-list {
+  flex-direction: row-reverse;
+}
+
+/* Dialog and modal RTL support */
+.rtl .dialog-content {
+  text-align: right;
+}
+
+.rtl .alert {
+  text-align: right;
+}
+
+/* Form input RTL support */
+.rtl input[type="text"],
+.rtl input[type="email"],
+.rtl textarea {
+  text-align: right;
+}
+
+/* Dropdown and select RTL support */
+.rtl .select-content {
+  text-align: right;
+}
+
+/* Toast notification RTL support */
+.rtl .toast {
+  text-align: right;
+}
+
+/* Loading spinner RTL adjustments */
+.rtl .animate-spin {
+  animation-direction: reverse;
+}
