@@ -46,7 +46,7 @@ class DatabaseHealthService {
 
       // Test basic connectivity with a simple query
       const { data: healthData, error: healthError } = await supabase
-        .from('organizations')
+        .from('orgs')
         .select('id')
         .limit(1)
         .single();

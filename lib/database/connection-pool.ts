@@ -369,7 +369,7 @@ export async function checkDatabaseHealth(): Promise<{
     
     // Simple query to test connection
     const { error } = await (await client)
-      .from('organizations')
+      .from('orgs')
       .select('id')
       .limit(1)
       .single();
