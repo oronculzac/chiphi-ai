@@ -46,7 +46,7 @@ export const DynamicPieChart = dynamic(
   () => import('recharts').then(mod => ({ default: mod.PieChart })),
   {
     loading: () => <ChartSkeleton />,
-    ssr: false, // Charts don&apos;t need SSR
+    ssr: false, // Charts don't need SSR
   }
 );
 

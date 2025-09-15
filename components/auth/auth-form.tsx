@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,12 +15,22 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ onSuccess }: AuthFormProps) {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('demo@chiphi.ai'); // Pre-fill with demo email
   const [password, setPassword] = useState('demo123!'); // Pre-fill with demo password
   const [showPassword, setShowPassword] = useState(false);
-  const [authMethod, setAuthMethod] = useState<'signin' | 'signup' | 'magic'>('signin'); // Default to signin
+  const [authMethod, setAuthMethod] = useState<'signin' | 'signup' | 'magic' | 'forgot'>('signin'); // Default to signin
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Check URL parameters for initial state
+  useEffect(() => {
+    const forgot = searchParams.get('forgot');
+    if (forgot === 'true') {
+      setAuthMethod('forgot');
+      setEmail(''); // Clear demo email for forgot password
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +53,8 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
       result = await authService.signInWithPassword(email.trim(), password.trim());
     } else if (authMethod === 'signup') {
       result = await authService.signUpWithPassword(email.trim(), password.trim());
+    } else if (authMethod === 'forgot') {
+      result = await authService.resetPassword(email.trim());
     } else {
       result = await authService.signInWithMagicLink(email.trim());
     }
@@ -58,6 +71,11 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
         setMessage({
           type: 'success',
           text: 'Account created! Check your email to verify your account.'
+        });
+      } else if (authMethod === 'forgot') {
+        setMessage({
+          type: 'success',
+          text: 'Check your email for password reset instructions!'
         });
       } else {
         setMessage({
@@ -80,8 +98,8 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs value={authMethod} onValueChange={(value) => setAuthMethod(value as 'signin' | 'signup' | 'magic')} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs value={authMethod} onValueChange={(value) => setAuthMethod(value as 'signin' | 'signup' | 'magic' | 'forgot')} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin" className="flex items-center gap-2">
               <Lock className="h-4 w-4" />
               Sign In
@@ -89,10 +107,6 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
             <TabsTrigger value="signup" className="flex items-center gap-2">
               <UserPlus className="h-4 w-4" />
               Sign Up
-            </TabsTrigger>
-            <TabsTrigger value="magic" className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              Magic Link
             </TabsTrigger>
           </TabsList>
 
@@ -164,6 +178,26 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
                 )}
               </Button>
             </form>
+
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={() => setAuthMethod('forgot')}
+                className="text-sm text-muted-foreground hover:text-primary underline"
+              >
+                Forgot your password?
+              </button>
+            </div>
+
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={() => setAuthMethod('magic')}
+                className="text-sm text-muted-foreground hover:text-primary underline"
+              >
+                Use magic link instead
+              </button>
+            </div>
 
             <div className="mt-4 p-3 bg-muted/50 rounded-lg border">
               <p className="text-sm text-muted-foreground mb-2">Demo credentials:</p>
@@ -287,7 +321,62 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
               <p>
-                We&apos;ll send you a secure link to sign in without a password.
+                We'll send you a secure link to sign in without a password.
+              </p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="forgot" className="space-y-4 mt-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="email-forgot" className="text-sm font-medium">
+                  Email address
+                </label>
+                <Input
+                  id="email-forgot"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
+                  required
+                />
+              </div>
+
+              {message && (
+                <Alert variant={message.type === 'error' ? 'destructive' : 'default'}>
+                  <AlertDescription>{message.text}</AlertDescription>
+                </Alert>
+              )}
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending reset email...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="mr-2 h-4 w-4" />
+                    Send reset email
+                  </>
+                )}
+              </Button>
+            </form>
+
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={() => setAuthMethod('signin')}
+                className="text-sm text-muted-foreground hover:text-primary underline"
+              >
+                Back to sign in
+              </button>
+            </div>
+
+            <div className="mt-6 text-center text-sm text-muted-foreground">
+              <p>
+                Enter your email and we'll send you a link to reset your password.
               </p>
             </div>
           </TabsContent>

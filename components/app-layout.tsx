@@ -28,7 +28,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/auth-provider"
-import GmailSetupWizard from "@/components/gmail-setup-wizard"
+// import GmailSetupWizard from "@/components/gmail-setup-wizard"
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -324,7 +324,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
           tabIndex={-1}
         >
           <div className="bg-background rounded-lg shadow-lg max-h-[90vh] overflow-y-auto relative">
-            <GmailSetupWizard onComplete={() => setShowGmailWizard(false)} />
+            {/* <GmailSetupWizard onComplete={() => setShowGmailWizard(false)} /> */}
+            <div className="p-4">Gmail Setup Wizard temporarily disabled</div>
           </div>
         </div>
       )}

@@ -331,7 +331,7 @@ export default function NotificationsTab() {
               <Button
                 variant="outline"
                 onClick={() => setAddingEmail(true)}
-                className=&quot;flex items-center gap-2&quot;
+                className="flex items-center gap-2"
                 disabled={loading}
               >
                 <Plus className="h-4 w-4" />
@@ -347,7 +347,7 @@ export default function NotificationsTab() {
           </CardContent>
         </Card>
 
-        {/* Show error alert if there&apos;s an error but we have data */}
+        {/* Show error alert if there's an error but we have data */}
         {error && preferences && (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />

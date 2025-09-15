@@ -111,14 +111,14 @@ export function ConfirmationDialog({
                 onChange={(e) => setTypedText(e.target.value)}
                 disabled={isLoading}
                 className={variant === 'destructive' ? 'border-destructive/20 focus:border-destructive' : ''}
-                autoComplete=&quot;off&quot;
+                autoComplete="off"
                 autoFocus
               />
             </div>
             
             {typedText && typedText !== requiresTyping.expectedText && (
               <p className="text-sm text-muted-foreground">
-                Text doesn&apos;t match. Please type exactly: <span className="font-mono">{requiresTyping.expectedText}</span>
+                Text doesn't match. Please type exactly: <span className="font-mono">{requiresTyping.expectedText}</span>
               </p>
             )}
           </div>

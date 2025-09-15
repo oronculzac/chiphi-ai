@@ -217,7 +217,7 @@ export const config = {
   app: {
     nodeEnv: env.NODE_ENV || 'development',
     nextAuthSecret: env.NEXTAUTH_SECRET || 'development-secret-key-minimum-32-characters-long-for-local-dev',
-    nextAuthUrl: env.NEXTAUTH_URL || 'http://localhost:3000',
+    nextAuthUrl: env.NEXTAUTH_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'),
     isDevelopment: (env.NODE_ENV || 'development') === 'development',
     isProduction: (env.NODE_ENV || 'development') === 'production',
   },

@@ -93,6 +93,44 @@ export class AuthService {
   }
 
   /**
+   * Reset password - send reset email
+   */
+  async resetPassword(email: string): Promise<{ error?: string }> {
+    try {
+      const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${config.app.nextAuthUrl}/auth/reset-password`,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
+      return { error: 'Failed to send reset email' };
+    }
+  }
+
+  /**
+   * Update password (used after reset)
+   */
+  async updatePassword(newPassword: string): Promise<{ error?: string }> {
+    try {
+      const { error } = await this.supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
+      return { error: 'Failed to update password' };
+    }
+  }
+
+  /**
    * Sign out current user
    */
   async signOut(): Promise<{ error?: string }> {
